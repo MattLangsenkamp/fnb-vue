@@ -17,8 +17,8 @@
           >
         </div>
       </div>
-      <router-link to="/locations">locations</router-link>
-      <router-link to="/">about</router-link>
+      <router-link to="/locations">Locations</router-link>
+      <router-link to="/">About</router-link>
     </div>
   </div>
 </template>
@@ -41,11 +41,11 @@ export default {
 <style scoped>
 #nav {
   border-bottom: 1px solid black;
-  height: 3em;
+  height: 5vh;
   flex-direction: row;
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 5.5em;
+  margin-bottom: 12vh;
 }
 .user-img {
   height: 2.4em;

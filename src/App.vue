@@ -5,14 +5,15 @@
 </template>
 
 <script>
-import Header from "../src/components/Header.vue";
+import Header from '../src/components/Header.vue'
 
 export default {
-  name: "App",
+  title: 'Roc Food Not Bombs',
+  name: 'App',
   components: {
-    Header,
-  },
-};
+    Header
+  }
+}
 </script>
 
 <style>
@@ -22,6 +23,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  width: 100%;
+  height: 100%;
 }
 
 #nav {
