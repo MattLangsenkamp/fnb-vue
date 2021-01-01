@@ -162,6 +162,6 @@ export default {
   justify-content: space-around;
   flex-flow: row wrap;
   width: 100%;
-  height: 70px;
+  height: 100%;
 }
 </style>

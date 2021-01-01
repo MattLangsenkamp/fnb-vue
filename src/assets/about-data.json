@@ -4,6 +4,11 @@
     "mainImg": "../assets/rfnb.svg",
     "desc": "Rochester Food Not Bombs recovers and shares free vegetarian and vegan meals in our local community. We are a decentralized all-volunteer run group, with no hierarchy or formal leaders, making decisions based on consensus. We recognize poverty as a form of violence, and think access to food should be viewed as a right, rather than a privilege. In this practice we strive to reduce waste by turning donated food into productive meals. We source food from vendors at the public market as well as relying on donations. Food should be a source of nutrition for people, not profit under capitalism. Through Community organizing and outreach, we support other local and national peace and justice groups to create a broader sense of social responsibility"
   },
+  "Covid": {
+    "title": "Covid 19 Update!",
+    "mainImg": "../assets/covid19.jpg",
+    "desc": "We have been opporating differently since Covid-19. Instead of doing our normal saturday cooks at the South Wedge mission we are focusing on supporting local actions led by other mutual aid and justice groups in the Rochester area. We are also focusing on setting up a network of free food stands around the city, that anyone can benefit from or contribute to."
+  },
   "donate": {
     "title": "Donate!",
     "mainImg": "../assets/money.png",

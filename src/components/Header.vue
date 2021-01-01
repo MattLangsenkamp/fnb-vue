@@ -45,7 +45,7 @@ export default {
   flex-direction: row;
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 12vh;
+  margin-bottom: 6vh;
 }
 .user-img {
   height: 2.4em;
@@ -118,6 +118,6 @@ export default {
   background-color: #e4e4e4;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.4);
-  z-index: 1;
+  z-index: 2000;
 }
 </style>

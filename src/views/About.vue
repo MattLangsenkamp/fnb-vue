@@ -1,9 +1,15 @@
 <template>
-  <div class="container">
+  <div class="container-about">
     <information-card
       :title="data.about.title"
       :mainImg="require(`../assets/fnb_info.jpg`)"
       :description="data.about.desc"
+      class="odd"
+    />
+    <information-card
+      :title="data.Covid.title"
+      :mainImg="require(`../assets/covid19.jpg`)"
+      :description="data.Covid.desc"
       class="odd"
     />
     <information-card
@@ -33,12 +39,8 @@ export default {
 </script>
 
 <style scoped>
-.containerp {
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
+.container-about {
+  margin-top: 10vh;
 }
 
 .odd {
