@@ -45,7 +45,7 @@ export default {
   flex-direction: row;
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 6vh;
+  margin-bottom: 7em;
 }
 .user-img {
   height: 2.4em;
@@ -74,6 +74,7 @@ export default {
   position: ablsolute;
   height: 10em;
   display: none;
+  z-index: 2000;
 }
 @media screen and (min-width: 540px) {
   .logo {

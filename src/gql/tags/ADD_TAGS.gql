@@ -1,0 +1,8 @@
+mutation CreateTag($tagName: String!, $description: String!) {
+  addLocationTag(tagName: $tagName, description: $description) {
+    id
+    ownerId
+    description
+    tagName
+  }
+}

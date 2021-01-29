@@ -1,0 +1,19 @@
+query Location($id: Int!) {
+  location(id: $id) {
+    id
+    locationName
+    friendlyName
+    description
+    latitude
+    longitude
+    locationOwner
+    locationTags {
+      description
+      tagName
+      id
+      ownerId
+    }
+    needsCleaning
+    pictureURI
+  }
+}

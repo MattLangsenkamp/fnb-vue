@@ -1,0 +1,37 @@
+mutation UpdateLocation(
+  $id: Int!
+  $name: String
+  $friendlyName: String
+  $description: String
+  $latitude: Float
+  $longitude: Float
+  $picture: String
+  $typeTags: [LocationTagInput!]
+) {
+  updateLocation(
+    id: $id
+    description: $description
+    name: $name
+    friendlyName: $friendlyName
+    latitude: $latitude
+    longitude: $longitude
+    picture: $picture
+    typeTags: $typeTags
+  ) {
+    id
+    locationName
+    friendlyName
+    description
+    latitude
+    longitude
+    locationOwner
+    locationTags {
+      description
+      tagName
+      id
+      ownerId
+    }
+    needsCleaning
+    pictureURI
+  }
+}
