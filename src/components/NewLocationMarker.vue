@@ -1,5 +1,5 @@
 <template>
-  <l-marker draggable :lat-lng="origin" @moveend="moved">
+  <l-marker draggable :lat-lng="cent" @moveend="moved">
     <l-tooltip>
       drag location to appropriate spot
     </l-tooltip>
@@ -17,7 +17,7 @@ import 'leaflet/dist/leaflet.css'
 
 export default {
   name: 'NewLocationMarker',
-  emits: ['moved'],
+  emits: ['moved', 'ready'],
   components: {
     LMarker,
     LTooltip,
@@ -25,21 +25,21 @@ export default {
     LIcon
   },
   props: {
-    setting: Boolean
+    setting: Boolean,
+    center: Array
   },
   data() {
     return {
-      origin: [43.15385, -77.6093],
       iconWidth: 45,
       iconHeight: 45
     }
   },
   computed: {
-    iconUrl() {
-      return require('../assets/red-icon.png')
-    },
     iconSize() {
       return [this.iconWidth, this.iconHeight]
+    },
+    cent() {
+      return this.center
     }
   },
   methods: {

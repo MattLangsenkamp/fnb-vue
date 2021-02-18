@@ -1,8 +1,0 @@
-query Locations($userId: Int!) {
-  locations(id: $userId) {
-    id
-    latitude
-    longitude
-    locationName
-  }
-}

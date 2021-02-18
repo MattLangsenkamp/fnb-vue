@@ -23,6 +23,7 @@
 
 <script>
 export default {
+  emits: ['update:modelValue'],
   props: {
     label: {
       type: String,
@@ -41,6 +42,8 @@ export default {
     placeholderOrLabel() {
       if (this.placeHolder != '') {
         return this.placeHolder
+      } else if (this.placeHolder === '' && this.modelValue !== '') {
+        return ''
       } else {
         return this.label
       }

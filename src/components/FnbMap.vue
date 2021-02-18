@@ -4,7 +4,7 @@
       v-model="zoom"
       v-model:zoom="zoom"
       :options="mapOptions"
-      :center="[43.1521, -77.607649]"
+      :center="center"
       @update:center="centerUpdate"
       @update:zoom="zoomUpdate"
       :zoomAnimation="true"
@@ -64,20 +64,22 @@
           <form-input
             label="Name"
             placeHolder="South Wedge Mission"
-            v-model="event.name"
+            v-model="name"
           />
+          <error-message :validationStatus="v.name" />
           <form-input
             label="Friendly Name"
             placeHolder="Caroline Street"
-            v-model="event.friendlyName"
+            v-model="friendlyName"
           />
+          <error-message :validationStatus="v.friendlyName" />
           <form-input
             label="Description"
             type="textarea"
             placeHolder="A Free Stand to take what you need from, and give to when you can"
-            v-model="event.description"
+            v-model="description"
           />
-          <changeable-image v-model="event.picture" />
+          <changeable-image v-model="picture" />
           <button class="button" @click="addLoc">
             Submit
           </button>
@@ -93,7 +95,7 @@
         :loc="loc"
         :adding="isAdding"
       />
-      <new-location-marker v-if="adding" @moved="setLatLong" />
+      <new-location-marker :center="cent" v-if="adding" />
     </l-map>
   </div>
 </template>
@@ -119,7 +121,17 @@ import 'leaflet/dist/leaflet.css'
 import NewLocationMarker from './NewLocationMarker.vue'
 import FormInput from './FormInput.vue'
 import ChangeableImage from './ChangeableImage.vue'
-
+import { ref } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import {
+  required,
+  email,
+  sameAs,
+  minLength,
+  minValue,
+  maxValue
+} from '@vuelidate/validators'
+import ErrorMessage from '../components/ErrorMessage.vue'
 export default {
   name: 'FnbMap',
   components: {
@@ -134,11 +146,55 @@ export default {
     LRectangle,
     NewLocationMarker,
     FormInput,
-    ChangeableImage
+    ChangeableImage,
+    ErrorMessage
   },
+  setup() {
+    const name = ref('')
+    const friendlyName = ref('')
+    const description = ref('')
+    const latitude = ref(0)
+    const longitude = ref(0)
+    const picture = ref('')
+    const locationTags = ref([])
+
+    const rules = {
+      name: { required, minLength: minLength(2) },
+      friendlyName: { required, minLength: minLength(2) },
+      description: { required, minLength: minLength(8) },
+      latitude: { required, minValue: minValue(-90), maxValue: maxValue(90) },
+      longitude: {
+        required,
+        minValue: minValue(-180),
+        maxValue: maxValue(180)
+      },
+      picture: { required },
+      locationTags: {}
+    }
+    const v = useVuelidate(rules, {
+      name,
+      friendlyName,
+      description,
+      latitude,
+      longitude,
+      picture,
+      locationTags
+    })
+    return {
+      name,
+      friendlyName,
+      description,
+      latitude,
+      longitude,
+      picture,
+      locationTags,
+      v
+    }
+  },
+
   data() {
     return {
-      test: [43.1521, -77.607649],
+      center: [43.1521, -77.607649],
       zoom: 13,
       iconWidth: 25,
       iconHeight: 40,
@@ -148,26 +204,10 @@ export default {
       adding: false,
       selectingSpot: false,
       fillingForm: false,
-      submitting: false,
-
-      event: {
-        name: '',
-        friendlyName: '',
-        description: '',
-        latitude: '',
-        longitude: '',
-        picture: '',
-        locationTags: []
-      }
+      submitting: false
     }
   },
   computed: {
-    iconUrl() {
-      return `https://placekitten.com/${this.iconWidth}/${this.iconHeight}`
-    },
-    iconSize() {
-      return [this.iconWidth, this.iconHeight]
-    },
     isAdding() {
       return this.adding
     },
@@ -179,6 +219,9 @@ export default {
     },
     locs() {
       return this.$store.state.locs
+    },
+    cent() {
+      return this.center
     }
   },
   methods: {
@@ -186,6 +229,7 @@ export default {
       this.currentZoom = zoom
     },
     centerUpdate(center) {
+      console.log(center)
       this.currentCenter = center
     },
     setAdding() {
@@ -214,14 +258,32 @@ export default {
       this.adding = false
     },
     setLatLong(latLong) {
-      this.event.latitude = latLong.lat
-      this.event.longitude = latLong.lng
+      this.latitude = latLong.lat
+      this.longitude = latLong.lng
     },
-    ...mapActions(['addLocation']),
+    ...mapActions(['addLocation', 'getLocations']),
     addLoc(e) {
       e.preventDefault()
-      this.addLocation(this.event)
+      this.v.$validate()
+      this.v.$dirty = true
+      if (!this.v.$error) {
+        e.preventDefault()
+        this.addLocation({
+          name: this.name,
+          friendlyName: this.friendlyName,
+          description: this.description,
+          latitude: this.latitude,
+          longitude: this.longitude,
+          picture: this.picture,
+          locationTags: this.locationTags
+        }).then(() => {
+          this.setNotAdding()
+        })
+      }
     }
+  },
+  mounted() {
+    this.getLocations()
   }
 }
 </script>

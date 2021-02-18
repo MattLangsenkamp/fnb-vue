@@ -28,12 +28,12 @@ const routes = [
     component: SignIn
   },
   {
-    path: '/profile',
+    path: '/profile/:id',
     name: 'Profile',
     component: Profile
   },
   {
-    path: '/location-page',
+    path: '/location-page/:id',
     name: 'LocationPage',
     component: LocationPage
   }

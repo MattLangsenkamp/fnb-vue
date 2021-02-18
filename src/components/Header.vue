@@ -4,17 +4,32 @@
     <div class="links">
       <div class="dropdown">
         <img
+          v-if="!loggedIn"
           class="user-img"
-          alt="default-login-img"
+          alt="profile"
           src="../assets/login-default.svg"
         />
+        <img
+          v-if="loggedIn"
+          class="user-img"
+          alt="profile"
+          :src="profileImage"
+        />
+
         <div class="dropdown-content">
-          <router-link class="nav-link-embedded" to="/signin"
+          <router-link v-if="!loggedIn" class="nav-link-embedded" to="/signin"
             >sign in</router-link
           >
-          <router-link class="nav-link-embedded" to="/signup"
+          <router-link v-if="!loggedIn" class="nav-link-embedded" to="/signup"
             >sign up</router-link
           >
+          <router-link
+            v-if="loggedIn"
+            class="nav-link-embedded"
+            :to="{ name: 'Profile', params: { id: userId } }"
+            >profile</router-link
+          >
+          <button v-if="loggedIn" @click="logOut">Log Out</button>
         </div>
       </div>
       <router-link to="/locations">Locations</router-link>
@@ -24,16 +39,37 @@
 </template>
 
 <script>
+import { watch } from 'vue'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'Header',
-  data() {
-    return {
-      fetchedImage: ''
-    }
+  methods: {
+    ...mapActions(['getUser', 'logOut']),
+    ...mapGetters(['userData'])
   },
   computed: {
-    loginImage() {
-      return this.fetchedImage ? 'poo' : '../assets/rfnb.svg'
+    userId() {
+      return this.$store.state.loggedInUser.jti
+    },
+    profileImage() {
+      const user = this.$store.state.users.find(
+        us => us.orgUserId == this.userId
+      )
+      if (!user && this.loggedIn == true) {
+        this.getUser(parseInt(this.$store.state.loggedInUser.jti))
+        return null
+      }
+      return user.pictureURI
+    },
+    loggedIn() {
+      return this.$store.state.loggedInUser != null
+    }
+  },
+  watch: {
+    loggedIn: function() {
+      if (this.loggedIn == true) {
+        this.getUser(parseInt(this.$store.state.loggedInUser.jti))
+      }
     }
   }
 }
