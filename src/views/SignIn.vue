@@ -55,7 +55,14 @@ export default {
       this.v.$validate()
       this.v.$dirty = true
       if (!this.v.$error) {
-        this.signIn({ email: this.userEmail, password: this.userPassword })
+        this.signIn({
+          email: this.userEmail,
+          password: this.userPassword
+        }).then(() => {
+          this.$router.push({
+            name: 'Locations'
+          })
+        })
       }
     }
   }

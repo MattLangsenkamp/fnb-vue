@@ -79,6 +79,7 @@
             placeHolder="A Free Stand to take what you need from, and give to when you can"
             v-model="description"
           />
+          <error-message :validationStatus="v.description" />
           <changeable-image v-model="picture" />
           <button class="button" @click="addLoc">
             Submit
@@ -95,7 +96,11 @@
         :loc="loc"
         :adding="isAdding"
       />
-      <new-location-marker :center="cent" v-if="adding" />
+      <new-location-marker
+        :center="cent"
+        v-on:moved="setLatLong"
+        v-if="adding"
+      />
     </l-map>
   </div>
 </template>
@@ -204,7 +209,8 @@ export default {
       adding: false,
       selectingSpot: false,
       fillingForm: false,
-      submitting: false
+      submitting: false,
+      recentered: false
     }
   },
   computed: {
@@ -218,10 +224,14 @@ export default {
       return this.fillingForm
     },
     locs() {
-      return this.$store.state.locs
+      return this.$store.state.locMod.locs
     },
     cent() {
-      return this.center
+      if (this.recentered == false) {
+        this.recentered = true
+        console.log('ok', this.center)
+        return this.center
+      }
     }
   },
   methods: {
@@ -229,8 +239,7 @@ export default {
       this.currentZoom = zoom
     },
     centerUpdate(center) {
-      console.log(center)
-      this.currentCenter = center
+      this.center = center
     },
     setAdding() {
       this.adding = true
@@ -240,6 +249,7 @@ export default {
       this.selectingSpot = false
       this.fillingForm = false
       this.submitting = false
+      this.recentered = false
     },
     setSettingLocation() {
       this.selectingSpot = true
@@ -282,7 +292,7 @@ export default {
       }
     }
   },
-  mounted() {
+  created() {
     this.getLocations()
   }
 }

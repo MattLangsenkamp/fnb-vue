@@ -115,6 +115,10 @@ export default {
           description: this.description,
           contact: this.contact,
           picture: this.picture
+        }).then(() => {
+          this.$router.push({
+            name: 'Locations'
+          })
         })
       }
     }

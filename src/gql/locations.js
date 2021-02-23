@@ -129,6 +129,7 @@ export const LOCATIONS = gql`
       latitude
       longitude
       locationName
+      locationOwner
     }
   }
 `

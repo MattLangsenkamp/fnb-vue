@@ -13,6 +13,8 @@
           {{ loc.description }}
         </div>
         <a :href="url" target="_blank">open in google maps for directions</a>
+        <button @click="goToProfile">location owner</button>
+        <button @click="goToLocation">location page</button>
       </div>
     </l-popup>
   </l-marker>
@@ -32,6 +34,20 @@ export default {
   props: {
     loc: Object,
     adding: Boolean
+  },
+  methods: {
+    goToProfile() {
+      this.$router.push({
+        name: 'Profile',
+        params: { id: this.loc.locationOwner }
+      })
+    },
+    goToLocation() {
+      this.$router.push({
+        name: 'LocationPage',
+        params: { id: this.loc.id }
+      })
+    }
   },
   computed: {
     url() {

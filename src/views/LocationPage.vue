@@ -2,31 +2,28 @@
   <div>
     <div>
       <form class="leaflet-style" v-if="isEditing">
-        <form-input
-          label="Name"
-          placeHolder="South Wedge Mission"
-          v-model="name"
-        />
+        <form-input label="Name" v-model="name" />
         <error-message :validationStatus="v.name" />
-        <form-input
-          label="Friendly Name"
-          placeHolder="Caroline Street"
-          v-model="friendlyName"
-        />
+        <form-input label="Friendly Name" v-model="friendlyName" />
         <error-message :validationStatus="v.friendlyName" />
-        <form-input
-          label="Description"
-          type="textarea"
-          placeHolder="A Free Stand to take what you need from, and give to when you can"
-          v-model="description"
-        />
+        <form-input label="Description" type="textarea" v-model="description" />
+        <error-message :validationStatus="v.description" />
         <changeable-image v-model="picture" />
-        <button class="button" @click="addLoc">
+        <button class="button" @click="updateLoc">
           Submit
         </button>
+        <button class="button" @click="deleteLoc">delete location</button>
       </form>
+
       <div v-if="!isEditing" class="leaflet-style">
         <button v-if="allowEditing" @click="toggleEditing">edit</button>
+        <span>{{ description }}</span>
+        <span>{{ friendlyName }}</span>
+        <span>{{ name }}</span>
+        <img :src="picture" />
+        <button @click="goToProfile">
+          location owner
+        </button>
       </div>
     </div>
   </div>
@@ -34,7 +31,9 @@
 
 <script>
 import FormInput from '../components/FormInput.vue'
-import { mapActions, mapGetters } from 'vuex'
+import ChangeableImage from '../components/ChangeableImage.vue'
+
+import { mapActions } from 'vuex'
 import { ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import {
@@ -45,17 +44,24 @@ import {
   minValue,
   maxValue
 } from '@vuelidate/validators'
+import ErrorMessage from '../components/ErrorMessage.vue'
+
 export default {
   name: 'LocationPage',
+  components: { FormInput, ErrorMessage, ChangeableImage },
+
   setup() {
     const editing = ref(false)
 
+    const id = ref(0)
     const name = ref('')
     const friendlyName = ref('')
     const description = ref('')
     const latitude = ref(0)
     const longitude = ref(0)
     const picture = ref('')
+    const locationOwner = ref('')
+    const needsCleaning = ref(false)
     const locationTags = ref([])
 
     const rules = {
@@ -81,6 +87,7 @@ export default {
       locationTags
     })
     return {
+      editing,
       name,
       friendlyName,
       description,
@@ -88,49 +95,95 @@ export default {
       longitude,
       picture,
       locationTags,
+      locationOwner,
+      needsCleaning,
       v
     }
   },
 
   methods: {
     ...mapActions([
-      'updateUser', // map `this.updateUser(user)` to `this.$store.dispatch('updateUser', user)`
-      'getUser'
+      'updateLocation', // map `this.updateUser(user)` to `this.$store.dispatch('updateUser', user)`
+      'getLocation',
+      'deleteLocation'
     ]),
-    ...mapGetters(['userData', 'loggedInUser']),
     toggleEditing() {
-      self.editing = !self.editing
+      this.editing = !this.editing
     },
-    updateProf(e) {
+    goToProfile() {
+      this.$router.push({
+        name: 'Profile',
+        params: { id: this.locationOwner }
+      })
+    },
+    updateLoc(e) {
       e.preventDefault()
       this.v.$validate()
       this.v.$dirty = true
       if (!this.v.$error) {
         e.preventDefault()
-        this.updateUser({
+        this.updateLocation({
+          id: this.id,
           name: this.name,
           friendlyName: this.friendlyName,
           description: this.description,
-          latitude: this.latitude,
-          longitude: this.longitude,
+          latitude: parseFloat(this.latitude),
+          longitude: parseFloat(this.longitude),
           picture: this.picture,
           locationTags: this.locationTags
+        }).then(() => {
+          this.toggleEditing()
+          this.v.$reset()
         })
       }
+    },
+    deleteLoc(e) {
+      e.preventDefault()
+      this.deleteLocation({ id: this.id }).then(() => {
+        this.$router.push({
+          name: 'Locations'
+        })
+      })
+    },
+    initProfile({
+      description,
+      friendlyName,
+      id,
+      latitude,
+      locationName,
+      locationOwner,
+      locationTags,
+      longitude,
+      needsCleaning,
+      pictureURI
+    }) {
+      this.description = description
+      this.friendlyName = friendlyName
+      this.id = id
+      this.locationName = locationName
+      this.locationOwner = locationOwner
+      this.latitude = latitude
+      this.name = locationName
+      this.picture = pictureURI
     }
   },
-  mounted() {
-    this.getUser(this.$route.params.id)
+  created() {
+    this.getLocation(parseInt(this.$route.params.id)).then(loc => {
+      this.initProfile(loc)
+    })
   },
   computed: {
-    user() {
-      return this.userData(this.$route.params.id)
-    },
     isEditing() {
-      return self.editing
+      return this.editing
     },
     allowEditing() {
-      return this.loggedInUser.id === this.$route.params.id
+      if (this.$store.state.authMod.loggedInUser) {
+        return (
+          parseInt(this.$store.state.authMod.loggedInUser.jti) ===
+          this.locationOwner
+        )
+      }
+      return false
     }
   }
 }

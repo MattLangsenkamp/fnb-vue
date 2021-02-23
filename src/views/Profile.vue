@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <form class="leaflet-style" v-if="isEditing">
+      <form class="leaflet-style bg-indigo-600" v-if="isEditing">
         <form-input label="Username" v-model="username" />
         <error-message :validationStatus="v.username" />
         <form-input label="Contact" v-model="contact" />
@@ -14,6 +14,9 @@
         <button class="button" @click="updateProf">
           Submit
         </button>
+        <button class="button" @click="deleteProf">
+          Delete
+        </button>
       </form>
       <div v-if="!isEditing" class="leaflet-style">
         <button v-if="allowEditing" @click="toggleEditing">edit</button>
@@ -21,9 +24,13 @@
         <span>{{ contact }}</span>
         <span>{{ description }}</span>
         <img :src="picture" />
-        <span v-for="loc in locations" :key="loc.id">{{
-          loc.locationName
-        }}</span>
+        <button
+          v-for="loc in locations"
+          :key="loc.id"
+          @click="goToLocation(loc.id)"
+        >
+          {{ loc.locationName }}
+        </button>
       </div>
     </div>
   </div>
@@ -31,6 +38,7 @@
 
 <script>
 import FormInput from '../components/FormInput.vue'
+import ChangeableImage from '../components/ChangeableImage.vue'
 import { mapActions, mapGetters } from 'vuex'
 import { ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
@@ -43,10 +51,10 @@ import {
   maxValue
 } from '@vuelidate/validators'
 import ErrorMessage from '../components/ErrorMessage.vue'
-import { store } from '../store/store.js'
 
 export default {
   name: 'Profile',
+  components: { FormInput, ErrorMessage, ChangeableImage },
   setup() {
     const editing = ref(false)
 
@@ -69,6 +77,7 @@ export default {
       picture
     })
     return {
+      editing,
       username,
       contact,
       description,
@@ -80,12 +89,11 @@ export default {
 
   methods: {
     ...mapActions([
-      'updateUser', // map `this.updateUser(user)` to `this.$store.dispatch('updateUser', user)`
-      'getUser'
+      'updateUserData', // map `this.updateUser(user)` to `this.$store.dispatch('updateUser', user)`
+      'getUserData'
     ]),
-    ...mapGetters(['userData', 'loggedInUser']),
     toggleEditing() {
-      self.editing = !self.editing
+      this.editing = !this.editing
     },
     updateProf(e) {
       e.preventDefault()
@@ -93,13 +101,21 @@ export default {
       this.v.$dirty = true
       if (!this.v.$error) {
         e.preventDefault()
-        this.updateUser({
+        this.updateUserData({
+          id: this.id,
+          orgUserId: this.orgUserId,
           username: this.username,
           contact: this.contact,
           description: this.description,
           picture: this.picture
+        }).then(() => {
+          this.toggleEditing()
+          this.v.$reset()
         })
       }
+    },
+    deleteProf(e) {
+      e.preventDefault()
     },
     initProfile({
       contact,
@@ -110,27 +126,34 @@ export default {
       username,
       locations
     }) {
+      this.id = id
+      this.orgUserId = orgUserId
       this.contact = contact
       this.username = username
       this.picture = pictureURI
       this.locations = locations
       this.description = description
+    },
+    goToLocation(id) {
+      this.$router.push({
+        name: 'LocationPage',
+        params: { id: id }
+      })
     }
   },
-  beforeRouteEnter(to, from, next) {
-    store.dispatch('getUser', parseInt(to.params.id)).then(user => {
-      next(vm => vm.initProfile(user))
-    })
+  created() {
+    this.getUserData(parseInt(this.$route.params.id)).then(user =>
+      this.initProfile(user)
+    )
   },
   computed: {
-    user() {
-      return this.userData(this.$route.params.id)
-    },
     isEditing() {
-      return self.editing
+      return this.editing
     },
     allowEditing() {
-      return this.loggedInUser.id === this.$route.params.id
+      return (
+        this.$store.state.authMod.loggedInUser.jti === this.$route.params.id
+      )
     }
   }
 }
@@ -141,7 +164,6 @@ export default {
   display: flex;
   flex-flow: column wrap;
   flex-direction: column;
-  background-color: #fff;
   text-align: left;
   text-decoration: none;
   color: black;

@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import { store } from './store/store.js'
 import { VuelidatePlugin } from '@vuelidate/core'
+import './index.css'
 
 const app = createApp({
   render() {

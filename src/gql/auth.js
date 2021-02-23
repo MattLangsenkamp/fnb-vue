@@ -1,5 +1,15 @@
 import { gql } from 'graphql-request'
 
+export const DELETE_USER = gql`
+  mutation DeleteUser($id: Int!) {
+    deleteUser(id: $id) {
+      id
+      email
+      permissionLevel
+    }
+  }
+`
+
 export const SIGN_IN = gql`
   mutation SignIn($email: String!, $password: String!) {
     signIn(email: $email, password: $password) {

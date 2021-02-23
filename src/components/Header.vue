@@ -44,31 +44,30 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'Header',
   methods: {
-    ...mapActions(['getUser', 'logOut']),
-    ...mapGetters(['userData'])
+    ...mapActions(['getUserData', 'logOut'])
   },
   computed: {
     userId() {
-      return this.$store.state.loggedInUser.jti
+      return this.$store.state.authMod.loggedInUser.jti
     },
     profileImage() {
-      const user = this.$store.state.users.find(
+      const user = this.$store.state.userDataMod.userDatas.find(
         us => us.orgUserId == this.userId
       )
       if (!user && this.loggedIn == true) {
-        this.getUser(parseInt(this.$store.state.loggedInUser.jti))
+        this.getUserData(parseInt(this.$store.state.authMod.loggedInUser.jti))
         return null
       }
       return user.pictureURI
     },
     loggedIn() {
-      return this.$store.state.loggedInUser != null
+      return this.$store.state.authMod.loggedInUser != null
     }
   },
   watch: {
     loggedIn: function() {
       if (this.loggedIn == true) {
-        this.getUser(parseInt(this.$store.state.loggedInUser.jti))
+        this.getUserData(parseInt(this.$store.state.authMod.loggedInUser.jti))
       }
     }
   }

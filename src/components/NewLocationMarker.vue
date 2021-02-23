@@ -17,7 +17,7 @@ import 'leaflet/dist/leaflet.css'
 
 export default {
   name: 'NewLocationMarker',
-  emits: ['moved', 'ready'],
+  emits: ['moved'],
   components: {
     LMarker,
     LTooltip,
