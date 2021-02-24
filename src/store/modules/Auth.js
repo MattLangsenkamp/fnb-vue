@@ -1,4 +1,4 @@
-import { SIGN_IN, SIGN_UP } from '../../gql/auth'
+import { SIGN_IN, SIGN_UP, DELETE_USER } from '../../gql/auth'
 import { getUserFromJwt } from '../jwtUtils.js'
 import { setHeaders } from '../jwtUtils.js'
 import { client } from '../client.js'
@@ -82,6 +82,22 @@ export const auth = {
     logOut(context) {
       context.commit('LOG_OUT')
       context.commit('SET_TOKENS', { accessToken: null, refreshToken: null })
+    },
+    deleteUser(context, id) {
+      return new Promise((resolve, reject) => {
+        client
+          .rawRequest(DELETE_USER, id)
+          .then(({ data }) => {
+            context.commit('DELETE_USER_DATA_BY_USER', data.deleteUser)
+            context.commit('LOG_OUT')
+            context.commit('SET_TOKENS', {
+              accessToken: null,
+              refreshToken: null
+            })
+            resolve()
+          })
+          .catch(err => console.log(err))
+      })
     }
   }
 }

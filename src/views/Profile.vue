@@ -90,7 +90,8 @@ export default {
   methods: {
     ...mapActions([
       'updateUserData', // map `this.updateUser(user)` to `this.$store.dispatch('updateUser', user)`
-      'getUserData'
+      'getUserData',
+      'deleteUser'
     ]),
     toggleEditing() {
       this.editing = !this.editing
@@ -116,6 +117,11 @@ export default {
     },
     deleteProf(e) {
       e.preventDefault()
+      this.deleteUser({ id: this.orgUserId }).then(() => {
+        this.$router.push({
+          name: 'Locations'
+        })
+      })
     },
     initProfile({
       contact,

@@ -11,6 +11,9 @@ export const userData = {
     },
     DELETE_USER_DATA(state, user) {
       state.userDatas = state.userDatas.filter(us => us.id != user.id)
+    },
+    DELETE_USER_DATA_BY_USER(state, user) {
+      state.userDatas = state.userDatas.filter(us => us.orgUserId != user.id)
     }
   },
   actions: {
