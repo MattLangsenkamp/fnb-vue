@@ -1,23 +1,28 @@
 <template>
-  <div class="custom-input">
-    <label v-if="label">{{ label }}</label>
-    <input
-      v-if="$attrs.type != 'textarea'"
-      v-bind="$attrs"
-      :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
-      class="new_loc_input"
-      :placeholder="placeholderOrLabel"
-    />
-    <textarea
-      v-else
-      v-bind="$attrs"
-      :value="modelValue"
-      rows="5"
-      @input="$emit('update:modelValue', $event.target.value)"
-      class="new_loc_input other"
-      :placeholder="placeholderOrLabel"
-    />
+  <div class="p-2 sm:flex">
+    <div class="w-1/3">
+      <label v-if="label" class="text-indigo-600">{{ label }}</label>
+    </div>
+    <div class="m-w-2/3">
+      <input
+        v-if="$attrs.type != 'textarea'"
+        v-bind="$attrs"
+        :value="modelValue"
+        @input="$emit('update:modelValue', $event.target.value)"
+        class="p-2"
+        :class="edit"
+        :placeholder="placeholderOrLabel"
+      />
+      <textarea
+        v-else
+        v-bind="$attrs"
+        :value="modelValue"
+        rows="5"
+        @input="$emit('update:modelValue', $event.target.value)"
+        class="border-indigo-600 p-2 border rounded"
+        :placeholder="placeholderOrLabel"
+      />
+    </div>
   </div>
 </template>
 
@@ -47,22 +52,10 @@ export default {
       } else {
         return this.label
       }
+    },
+    edit() {
+      return ['rounded', 'border-indigo-600', 'border']
     }
   }
 }
 </script>
-<style scoped>
-.new-loc-input {
-  font: 13px 'Lucida Console', Monaco, monospace;
-}
-
-.custom-input {
-  font: bold 18px 'Lucida Console', Monaco, monospace;
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-  text-decoration: none;
-  color: black;
-  padding: 0.7em;
-}
-</style>

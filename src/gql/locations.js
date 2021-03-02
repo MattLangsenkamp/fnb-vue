@@ -130,6 +130,8 @@ export const LOCATIONS = gql`
       longitude
       locationName
       locationOwner
+      friendlyName
+      description
     }
   }
 `
