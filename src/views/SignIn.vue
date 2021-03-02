@@ -1,5 +1,7 @@
 <template>
-  <form class="leaflet-style-signup">
+  <form
+    class=" border border-gray-200  rounded w-3/4 md:w-1/2  lg:w-1/3 m-auto"
+  >
     <form-input
       label="email"
       v-model="userEmail"
@@ -14,9 +16,12 @@
       autocomplete="current-password"
     />
     <error-message :validationStatus="v.userPassword" />
-    <button class="button" @click="submitLocal">
-      Submit
-    </button>
+    <map-button
+      @click="submitLocal"
+      title="Submit"
+      text="Submit"
+      buttonType="form"
+    />
   </form>
 </template>
 
@@ -28,9 +33,10 @@ import { ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, email, sameAs, minLength } from '@vuelidate/validators'
 import ErrorMessage from '../components/ErrorMessage.vue'
+import MapButton from '../components/MapButton.vue'
 
 export default {
-  components: { FormInput, ChangeableImage, ErrorMessage },
+  components: { FormInput, ChangeableImage, ErrorMessage, MapButton },
 
   name: 'SignIn',
   setup() {
@@ -68,37 +74,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.leaflet-style-signup {
-  display: flex;
-  flex-flow: column wrap;
-  flex-direction: column;
-  background-color: #fff;
-  text-align: left;
-  text-decoration: none;
-  color: black;
-  border-radius: 4px;
-  border: 2px solid #ccc;
-  padding: 0.7em;
-  width: 75%;
-  margin-right: auto;
-  margin-left: auto;
-}
-.button {
-  align-self: flex-end;
-  font: bold 18px 'Lucida Console', Monaco, monospace;
-  background-color: #fff;
-  text-align: center;
-  text-decoration: none;
-  color: black;
-  border-radius: 4px;
-  border: 2px solid #ccc;
-}
-
-@media screen and (min-width: 920px) {
-  .leaflet-style-signup {
-    width: 44em;
-  }
-}
-</style>

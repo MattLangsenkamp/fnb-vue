@@ -90,7 +90,8 @@ export default {
   methods: {
     ...mapActions([
       'updateUserData', // map `this.updateUser(user)` to `this.$store.dispatch('updateUser', user)`
-      'getUserData'
+      'getUserData',
+      'deleteUser'
     ]),
     toggleEditing() {
       this.editing = !this.editing
@@ -116,6 +117,11 @@ export default {
     },
     deleteProf(e) {
       e.preventDefault()
+      this.deleteUser({ id: this.orgUserId }).then(() => {
+        this.$router.push({
+          name: 'Locations'
+        })
+      })
     },
     initProfile({
       contact,
@@ -151,9 +157,12 @@ export default {
       return this.editing
     },
     allowEditing() {
-      return (
-        this.$store.state.authMod.loggedInUser.jti === this.$route.params.id
-      )
+      if (this.$store.state.authMod.loggedInUser) {
+        return (
+          this.$store.state.authMod.loggedInUser.jti === this.$route.params.id
+        )
+      }
+      return false
     }
   }
 }
@@ -173,15 +182,5 @@ export default {
   width: 75%;
   margin-right: auto;
   margin-left: auto;
-}
-.button {
-  align-self: flex-end;
-  font: bold 18px 'Lucida Console', Monaco, monospace;
-  background-color: #fff;
-  text-align: center;
-  text-decoration: none;
-  color: black;
-  border-radius: 4px;
-  border: 2px solid #ccc;
 }
 </style>

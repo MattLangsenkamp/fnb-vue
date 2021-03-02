@@ -1,17 +1,21 @@
 <template>
-  <Header />
-
-  <router-view />
+  <div class="min-h-screen">
+    <Header />
+    <router-view class="font-mono" />
+    <Footer />
+  </div>
 </template>
 
 <script>
 import Header from '../src/components/Header.vue'
+import Footer from './components/Footer.vue'
 
 export default {
   title: 'Roc Food Not Bombs',
   name: 'App',
   components: {
-    Header
+    Header,
+    Footer
   },
   created() {
     this.$store.dispatch('init')
@@ -19,27 +23,4 @@ export default {
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Roboto Mono', monospace;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  width: 100%;
-  height: 100%;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+<style></style>

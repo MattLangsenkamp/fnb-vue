@@ -1,5 +1,5 @@
 <template>
-  <div class="map">
+  <div class="m-2 w-full h-full">
     <l-map
       v-model="zoom"
       v-model:zoom="zoom"
@@ -8,51 +8,42 @@
       @update:center="centerUpdate"
       @update:zoom="zoomUpdate"
       :zoomAnimation="true"
+      class="rounded-xl"
     >
       <l-control position="topright">
         <!-- add or back -->
-        <button
-          class="button"
+        <MapButton
+          text="Add a Location"
           title="Login or create an account to add locations"
           @click="setAdding(), setSettingLocation()"
           v-if="!isAdding"
-        >
-          {{ 'Add a Location' }}
-        </button>
-        <button
-          class="button"
+        />
+        <MapButton
+          text="Cancel"
           title="Cancel"
           @click="setNotAdding"
           v-else-if="isSettingLocation"
-        >
-          {{ 'Cancel' }}
-        </button>
-        <button
-          class="button"
+        />
+        <MapButton
+          text="Change Location"
           title="Change Location"
           @click="setSettingLocation"
           v-else-if="isFillingOutForm"
-        >
-          {{ 'Change Location' }}
-        </button>
+        />
 
         <!-- forward or submit -->
-        <button
-          class="button"
+        <MapButton
+          text="Set Position"
           title="Set Location Position"
           @click="setFillingForm"
           v-if="isSettingLocation"
-        >
-          {{ 'Set Position' }}
-        </button>
-        <button
-          class="button"
+        />
+        <MapButton
+          text="Add Location"
           title="Submit"
           @click="setSubmitting"
           v-if="isFillingOutForm"
-        >
-          {{ 'Add Location' }}
-        </button>
+        />
       </l-control>
 
       <l-control
@@ -81,9 +72,12 @@
           />
           <error-message :validationStatus="v.description" />
           <changeable-image v-model="picture" />
-          <button class="button" @click="addLoc">
-            Submit
-          </button>
+          <MapButton
+            text="submit"
+            title="submit"
+            buttonType="form"
+            @click="addLoc"
+          />
         </form>
       </l-control>
       <l-tile-layer
@@ -128,6 +122,7 @@ import FormInput from './FormInput.vue'
 import ChangeableImage from './ChangeableImage.vue'
 import { ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
+import MapButton from './MapButton.vue'
 import {
   required,
   email,
@@ -152,7 +147,8 @@ export default {
     NewLocationMarker,
     FormInput,
     ChangeableImage,
-    ErrorMessage
+    ErrorMessage,
+    MapButton
   },
   setup() {
     const name = ref('')
@@ -299,27 +295,7 @@ export default {
 </script>
 
 <style scoped>
-.map {
-  height: 100%;
-  width: 100%;
-  align-items: flex-end;
-  display: flex;
-  flex-flow: column nowrap;
-}
-
-.button {
-  align-self: flex-end;
-  font: bold 18px 'Lucida Console', Monaco, monospace;
-  background-color: #fff;
-  text-align: center;
-  text-decoration: none;
-  color: black;
-  border-radius: 4px;
-  border: 2px solid #ccc;
-}
-
 .new-form {
-  font: bold 18px 'Lucida Console', Monaco, monospace;
   display: flex;
   flex-direction: column;
   background-color: #fff;
