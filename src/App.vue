@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen">
+  <div class="h-screen">
     <Header />
     <router-view class="font-mono" />
     <Footer />

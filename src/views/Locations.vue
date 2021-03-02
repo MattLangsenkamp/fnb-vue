@@ -1,6 +1,6 @@
 <template>
   <fnb-map
-    class="map p-2 m-auto max-w-m md:max-w-3xl lg:max-w-5xl xl:max-w-7xl h-56"
+    class="map p-2 pb-12 m-auto max-w-m md:max-w-3xl lg:max-w-5xl xl:max-w-7xl h-56"
   />
 </template>
 
