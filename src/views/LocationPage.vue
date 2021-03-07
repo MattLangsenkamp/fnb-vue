@@ -1,12 +1,5 @@
 <template>
   <div>
-    <Modal
-      v-if="attemptDelete"
-      title="Delete Location"
-      message="Are you sure you want to delete this location? This action cannot be undone"
-      :action="deleteLoc"
-      :nonAction="toggleAttDel"
-    />
     <form class="w-3/4 sm:w-1/2 m-auto border p-4 border-indigo-500 rounded">
       <map-button
         v-if="allowEditing && !editing"
