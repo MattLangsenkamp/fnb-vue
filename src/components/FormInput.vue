@@ -1,27 +1,34 @@
 <template>
-  <div class="p-2 sm:flex">
-    <div class="w-1/3">
+  <div class="p-2 sm:flex w-full">
+    <div class="w-full sm:w-1/3">
       <label v-if="label" class="text-indigo-600">{{ label }}</label>
     </div>
     <div class="m-w-2/3">
       <input
-        v-if="$attrs.type != 'textarea'"
+        v-if="$attrs.type != 'textarea' && editing"
         v-bind="$attrs"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
-        class="p-2"
+        class="p-2 text-gray-500 w-full break-words"
         :class="edit"
         :placeholder="placeholderOrLabel"
+        :disabled="!editing"
       />
       <textarea
-        v-else
+        v-else-if="$attrs.type == 'textarea' && editing"
         v-bind="$attrs"
         :value="modelValue"
-        rows="5"
+        rows="3"
+        cols="30"
         @input="$emit('update:modelValue', $event.target.value)"
-        class="border-indigo-600 p-2 border rounded"
+        class="p-2 text-gray-500 w-full"
+        :class="edit"
         :placeholder="placeholderOrLabel"
+        :disabled="!editing"
       />
+      <span v-if="!editing" class="p-2 text-gray-500 break-words w-full"
+        >{{ modelValue }}
+      </span>
     </div>
   </div>
 </template>
@@ -41,6 +48,10 @@ export default {
     placeHolder: {
       type: String,
       default: ''
+    },
+    editing: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -54,7 +65,11 @@ export default {
       }
     },
     edit() {
-      return ['rounded', 'border-indigo-600', 'border']
+      if (this.editing) {
+        return ['rounded', 'border-indigo-600', 'border', 'resize']
+      } else {
+        return ['rounded', 'bg-white', 'resize-none']
+      }
     }
   }
 }

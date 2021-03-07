@@ -1,38 +1,51 @@
 <template>
   <div>
-    <div>
-      <form class="leaflet-style bg-indigo-600" v-if="isEditing">
-        <form-input label="Username" v-model="username" />
-        <error-message :validationStatus="v.username" />
-        <form-input label="Contact" v-model="contact" />
-        <error-message :validationStatus="v.contact" />
-        <form-input label="Description" type="textarea" v-model="description" />
-        <error-message :validationStatus="v.description" />
+    <form class="w-1/2 m-auto border mb-4 p-4 border-indigo-500 rounded">
+      <map-button
+        v-if="allowEditing && !editing"
+        text="Edit"
+        buttonType="form"
+        @click="toggleEditing"
+      />
+      <form-input label="Username" v-model="username" :editing="isEditing" />
+      <error-message :validationStatus="v.username" />
+      <form-input label="Contact" v-model="contact" :editing="isEditing" />
+      <error-message :validationStatus="v.contact" />
+      <form-input
+        label="Description"
+        type="textarea"
+        v-model="description"
+        :editing="isEditing"
+      />
+      <error-message :validationStatus="v.description" />
 
-        <changeable-image v-model="picture" />
-        <error-message :validationStatus="v.picture" />
-        <button class="button" @click="updateProf">
-          Submit
-        </button>
-        <button class="button" @click="deleteProf">
-          Delete
-        </button>
-      </form>
-      <div v-if="!isEditing" class="leaflet-style">
-        <button v-if="allowEditing" @click="toggleEditing">edit</button>
-        <span>{{ username }}</span>
-        <span>{{ contact }}</span>
-        <span>{{ description }}</span>
-        <img :src="picture" />
-        <button
-          v-for="loc in locations"
-          :key="loc.id"
-          @click="goToLocation(loc.id)"
-        >
-          {{ loc.locationName }}
-        </button>
-      </div>
-    </div>
+      <changeable-image
+        v-model="picture"
+        :editing="isEditing"
+        label="Profile Picture"
+      />
+      <error-message :validationStatus="v.picture" />
+      <map-button
+        class="button"
+        v-if="editing"
+        text="Submit"
+        buttonType="form"
+        @click="updateProf"
+      />
+      <map-button
+        class="button"
+        v-if="editing"
+        text="Delete"
+        buttonType="form"
+        @click="deleteProf"
+      />
+      <map-button
+        v-if="editing"
+        text="Cancel"
+        buttonType="form"
+        @click="toggleEditing"
+      />
+    </form>
   </div>
 </template>
 
@@ -51,10 +64,11 @@ import {
   maxValue
 } from '@vuelidate/validators'
 import ErrorMessage from '../components/ErrorMessage.vue'
+import MapButton from '../components/MapButton.vue'
 
 export default {
   name: 'Profile',
-  components: { FormInput, ErrorMessage, ChangeableImage },
+  components: { FormInput, ErrorMessage, ChangeableImage, MapButton },
   setup() {
     const editing = ref(false)
 
@@ -167,20 +181,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.leaflet-style {
-  display: flex;
-  flex-flow: column wrap;
-  flex-direction: column;
-  text-align: left;
-  text-decoration: none;
-  color: black;
-  border-radius: 4px;
-  border: 2px solid #ccc;
-  padding: 0.7em;
-  width: 75%;
-  margin-right: auto;
-  margin-left: auto;
-}
-</style>

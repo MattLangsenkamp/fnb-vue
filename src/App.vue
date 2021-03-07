@@ -1,5 +1,7 @@
 <template>
-  <div class="min-h-screen">
+  <div
+    class="h-screen flex  flex-col justify-between scrollbar-thin scrollbar-thumb-indigo-500 scrollbar-track-indigo-200 "
+  >
     <Header />
     <router-view class="font-mono" />
     <Footer />
