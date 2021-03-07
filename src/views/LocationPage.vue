@@ -1,37 +1,68 @@
 <template>
   <div>
-    <div>
-      <form class="leaflet-style" v-if="isEditing">
-        <form-input label="Name" v-model="name" />
-        <error-message :validationStatus="v.name" />
-        <form-input label="Friendly Name" v-model="friendlyName" />
-        <error-message :validationStatus="v.friendlyName" />
-        <form-input label="Description" type="textarea" v-model="description" />
-        <error-message :validationStatus="v.description" />
-        <changeable-image v-model="picture" />
-        <button class="button" @click="updateLoc">
-          Submit
-        </button>
-        <button class="button" @click="deleteLoc">delete location</button>
-      </form>
-
-      <div v-if="!isEditing" class="leaflet-style">
-        <button v-if="allowEditing" @click="toggleEditing">edit</button>
-        <span>{{ description }}</span>
-        <span>{{ friendlyName }}</span>
-        <span>{{ name }}</span>
-        <img :src="picture" />
-        <button @click="goToProfile">
-          location owner
-        </button>
-      </div>
-    </div>
+    <Modal
+      v-if="attemptDelete"
+      title="Delete Location"
+      message="Are you sure you want to delete this location? This action cannot be undone"
+      :action="deleteLoc"
+      :nonAction="toggleAttDel"
+    />
+    <form class="w-3/4 sm:w-1/2 m-auto border p-4 border-indigo-500 rounded">
+      <map-button
+        v-if="allowEditing && !editing"
+        text="Edit"
+        buttonType="form"
+        @click="toggleEditing"
+      />
+      <form-input label="Name" v-model="name" :editing="isEditing" />
+      <error-message :validationStatus="v.name" />
+      <form-input
+        label="Friendly Name"
+        v-model="friendlyName"
+        :editing="isEditing"
+      />
+      <error-message :validationStatus="v.friendlyName" />
+      <form-input
+        label="Description"
+        type="textarea"
+        v-model="description"
+        :editing="isEditing"
+      />
+      <error-message :validationStatus="v.description" />
+      <changeable-image
+        label="Location Picture"
+        v-model="picture"
+        :editing="isEditing"
+      />
+      <map-button
+        class="button"
+        v-if="editing"
+        text="Submit"
+        buttonType="form"
+        @click="updateLoc"
+      />
+      <map-button
+        class="button"
+        v-if="editing"
+        text="Delete"
+        buttonType="form"
+        @click="toggleAttDel"
+      />
+      <map-button
+        v-if="editing"
+        text="Cancel"
+        buttonType="form"
+        @click="toggleEditing"
+      />
+    </form>
   </div>
 </template>
 
 <script>
 import FormInput from '../components/FormInput.vue'
 import ChangeableImage from '../components/ChangeableImage.vue'
+import MapButton from '../components/MapButton.vue'
+import Modal from '../components/Modal.vue'
 
 import { mapActions } from 'vuex'
 import { ref } from 'vue'
@@ -48,7 +79,7 @@ import ErrorMessage from '../components/ErrorMessage.vue'
 
 export default {
   name: 'LocationPage',
-  components: { FormInput, ErrorMessage, ChangeableImage },
+  components: { FormInput, ErrorMessage, ChangeableImage, MapButton, Modal },
 
   setup() {
     const editing = ref(false)
@@ -63,6 +94,7 @@ export default {
     const locationOwner = ref('')
     const needsCleaning = ref(false)
     const locationTags = ref([])
+    const attemptDelete = ref(false)
 
     const rules = {
       name: { required, minLength: minLength(2) },
@@ -97,6 +129,7 @@ export default {
       locationTags,
       locationOwner,
       needsCleaning,
+      attemptDelete,
       v
     }
   },
@@ -115,6 +148,10 @@ export default {
         name: 'Profile',
         params: { id: this.locationOwner }
       })
+    },
+    toggleAttDel(e) {
+      e.preventDefault()
+      this.attemptDelete = !this.attemptDelete
     },
     updateLoc(e) {
       e.preventDefault()
@@ -137,8 +174,7 @@ export default {
         })
       }
     },
-    deleteLoc(e) {
-      e.preventDefault()
+    deleteLoc() {
       this.deleteLocation({ id: this.id }).then(() => {
         this.$router.push({
           name: 'Locations'
@@ -163,6 +199,7 @@ export default {
       this.locationName = locationName
       this.locationOwner = locationOwner
       this.latitude = latitude
+      this.longitude = longitude
       this.name = locationName
       this.picture = pictureURI
     }
@@ -204,15 +241,5 @@ export default {
   width: 75%;
   margin-right: auto;
   margin-left: auto;
-}
-.button {
-  align-self: flex-end;
-  font: bold 18px 'Lucida Console', Monaco, monospace;
-  background-color: #fff;
-  text-align: center;
-  text-decoration: none;
-  color: black;
-  border-radius: 4px;
-  border: 2px solid #ccc;
 }
 </style>

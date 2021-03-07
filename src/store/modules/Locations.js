@@ -3,7 +3,8 @@ import {
   ADD_LOCATION,
   UPDATE_LOCATION,
   LOCATION,
-  LOCATIONS
+  LOCATIONS,
+  PICTURES
 } from '../../gql/locations'
 import { setHeaders } from '../jwtUtils.js'
 import { client } from '../client.js'
@@ -50,12 +51,23 @@ export const location = {
     },
     getLocations(context) {
       return new Promise((resolve, reject) => {
-        console.log(context.state.accessToken)
         client
           .rawRequest(LOCATIONS)
           .then(({ data, errors, extensions, headers, status }) => {
             // setHeaders(headers)
             context.commit('SET_LOCATIONS', data.locations)
+            resolve(data.locations)
+          })
+          .catch(err => console.log(err))
+      })
+    },
+    getPictures(context) {
+      return new Promise((resolve, reject) => {
+        client
+          .rawRequest(PICTURES)
+          .then(({ data, errors, extensions, headers, status }) => {
+            // setHeaders(headers)
+            resolve(data.locations)
           })
           .catch(err => console.log(err))
       })
@@ -84,6 +96,18 @@ export const location = {
             resolve(data.deleteLocation)
           })
           .catch(err => console.log(err))
+      })
+    },
+    getAddress(context, location) {
+      return new Promise((resolve, reject) => {
+        console.log(location)
+        fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${location.latitude}&lon=${location.longitude}`
+        )
+          .then(response => response.json())
+          .then(data => {
+            resolve(data)
+          })
       })
     }
   }

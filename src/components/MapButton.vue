@@ -1,7 +1,7 @@
 <template>
   <button
     :title="title"
-    class="m-2 bg-white border focus:border-2 border-indigo-600 ml-2 hover:bg-gray-100 font-mono focus:outline-none"
+    class="m-2 bg-white border focus:border-2 rounded text-gray-500 focus:text-gray-900 border-indigo-500 ml-2 hover:bg-gray-100 focus:outline-none"
     :class="classes"
   >
     {{ text }}

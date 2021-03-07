@@ -1,10 +1,10 @@
 <template>
-  <div
+  <footer
     class="flex h-16 w-full justify-around content-center items-center bg-gray-100"
   >
     <a href="https://github.com/rocfoodnotbombs" target="_blank" class="h-10">
       <span class="sr-only">Workflow</span>
-      <img class="w-auto h-10" src="../assets/git.svg" />
+      <img class="w-auto p-1 h-10" src="../assets/git.svg" />
     </a>
     <div class="block font-thin text-xs xs:text-sm">
       <div class="text-indigo-500">
@@ -20,7 +20,7 @@
         >
       </div>
     </div>
-  </div>
+  </footer>
 </template>
 
 <script>

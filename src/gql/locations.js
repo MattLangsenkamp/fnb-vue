@@ -135,3 +135,12 @@ export const LOCATIONS = gql`
     }
   }
 `
+
+export const PICTURES = gql`
+  query Locations($userId: Int) {
+    locations(id: $userId) {
+      id
+      pictureURI
+    }
+  }
+`

@@ -1,6 +1,6 @@
 <template>
   <form
-    class=" border border-gray-200  rounded w-3/4 md:w-1/2  lg:w-1/3 m-auto"
+    class=" border border-gray-200 mb-4 rounded w-3/4 md:w-1/2  lg:w-1/3 m-auto"
   >
     <form-input
       :label="`Email`"
@@ -43,7 +43,7 @@
       placeHolder="Roc Food Not Bombs recovers and shares free vegetarian and vegan meals & food in our local community of Rochester, NY."
     />
     <error-message :validationStatus="v.description" />
-    <changeable-image v-model="picture" />
+    <dropzone-image v-model="picture" label="Profile Picture" />
     <error-message :validationStatus="v.picture" />
     <map-button
       buttonType="form"
@@ -63,9 +63,16 @@ import useVuelidate from '@vuelidate/core'
 import { required, email, sameAs, minLength } from '@vuelidate/validators'
 import ErrorMessage from '../components/ErrorMessage.vue'
 import MapButton from '../components/MapButton.vue'
+import DropzoneImage from '../components/DropzoneImage.vue'
 
 export default {
-  components: { FormInput, ErrorMessage, ChangeableImage, MapButton },
+  components: {
+    FormInput,
+    ErrorMessage,
+    ChangeableImage,
+    MapButton,
+    DropzoneImage
+  },
   name: 'SignUp',
 
   setup() {
@@ -113,7 +120,6 @@ export default {
       this.v.$validate()
       this.v.$dirty = true
       if (!this.v.$error) {
-        console.log('sending')
         this.signUp({
           email: this.userEmail,
           password: this.userPassword,

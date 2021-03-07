@@ -16,7 +16,7 @@
           text="Add a Location"
           title="Login or create an account to add locations"
           @click="setAdding(), setSettingLocation()"
-          v-if="!isAdding"
+          v-if="!isAdding && loggedIn"
         />
         <MapButton
           text="Cancel"
@@ -25,33 +25,33 @@
           v-else-if="isSettingLocation"
         />
         <MapButton
-          text="Change Location"
-          title="Change Location"
-          @click="setSettingLocation"
-          v-else-if="isFillingOutForm"
-        />
-
-        <!-- forward or submit -->
-        <MapButton
           text="Set Position"
           title="Set Location Position"
           @click="setFillingForm"
           v-if="isSettingLocation"
         />
+
+        <!-- forward or submit -->
         <MapButton
-          text="Add Location"
-          title="Submit"
-          @click="setSubmitting"
+          text="Cancel"
+          title="Cancel"
+          @click="setNotAdding"
+          v-if="isFillingOutForm"
+        />
+        <MapButton
+          text="Change Location"
+          title="Change Location"
+          @click="setSettingLocation"
           v-if="isFillingOutForm"
         />
       </l-control>
 
       <l-control
         position="bottomright"
-        class="leaflet-style"
+        class="border mr-5 border-indigo-500 max-h-96 bg-white p-1 rounded scrollbar-thin scrollbar-thumb-indigo-500 scrollbar-track-indigo-200 overflow-auto"
         v-if="isFillingOutForm"
       >
-        <form>
+        <form class="max-h-80">
           <form-input
             label="Name"
             placeHolder="South Wedge Mission"
@@ -71,7 +71,7 @@
             v-model="description"
           />
           <error-message :validationStatus="v.description" />
-          <changeable-image v-model="picture" />
+          <dropzone-image v-model="picture" label="Location Picture" />
           <MapButton
             text="submit"
             title="submit"
@@ -123,6 +123,7 @@ import ChangeableImage from './ChangeableImage.vue'
 import { ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import MapButton from './MapButton.vue'
+import DropzoneImage from './DropzoneImage'
 import {
   required,
   email,
@@ -148,7 +149,8 @@ export default {
     FormInput,
     ChangeableImage,
     ErrorMessage,
-    MapButton
+    MapButton,
+    DropzoneImage
   },
   setup() {
     const name = ref('')
@@ -222,10 +224,12 @@ export default {
     locs() {
       return this.$store.state.locMod.locs
     },
+    loggedIn() {
+      return this.$store.state.authMod.loggedInUser != null
+    },
     cent() {
       if (this.recentered == false) {
         this.recentered = true
-        console.log('ok', this.center)
         return this.center
       }
     }
@@ -253,9 +257,15 @@ export default {
       this.submitting = false
     },
     setFillingForm() {
-      this.fillingForm = true
-      this.selectingSpot = false
-      this.submitting = false
+      this.getAddress({
+        latitude: String(this.latitude),
+        longitude: String(this.longitude)
+      }).then(data => {
+        this.friendlyName = data.display_name
+        this.fillingForm = true
+        this.selectingSpot = false
+        this.submitting = false
+      })
     },
     setSubmitting() {
       this.submitting = true
@@ -267,7 +277,7 @@ export default {
       this.latitude = latLong.lat
       this.longitude = latLong.lng
     },
-    ...mapActions(['addLocation', 'getLocations']),
+    ...mapActions(['addLocation', 'getLocations', 'getAddress']),
     addLoc(e) {
       e.preventDefault()
       this.v.$validate()
@@ -293,34 +303,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.new-form {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  text-align: left;
-  text-decoration: none;
-  color: black;
-  border-radius: 4px;
-  border: 2px solid #ccc;
-  padding: 0.7em;
-  max-width: 50%;
-}
-.new-loc-input {
-  font: 13px 'Lucida Console', Monaco, monospace;
-}
-.leaflet-style {
-  display: flex;
-  flex-flow: column wrap;
-  flex-direction: column;
-  background-color: #fff;
-  text-align: left;
-  text-decoration: none;
-  color: black;
-  border-radius: 4px;
-  border: 2px solid #ccc;
-  padding: 0.7em;
-  margin-right: 1.2vh;
-}
-</style>
