@@ -87,7 +87,6 @@ export default {
     const locationOwner = ref('')
     const needsCleaning = ref(false)
     const locationTags = ref([])
-    const attemptDelete = ref(false)
 
     const rules = {
       name: { required, minLength: minLength(2) },
@@ -122,7 +121,6 @@ export default {
       locationTags,
       locationOwner,
       needsCleaning,
-      attemptDelete,
       v
     }
   },
@@ -131,7 +129,8 @@ export default {
     ...mapActions([
       'updateLocation', // map `this.updateUser(user)` to `this.$store.dispatch('updateUser', user)`
       'getLocation',
-      'deleteLocation'
+      'deleteLocation',
+      'openAreYouSure'
     ]),
     toggleEditing() {
       this.editing = !this.editing
@@ -144,7 +143,13 @@ export default {
     },
     toggleAttDel(e) {
       e.preventDefault()
-      this.attemptDelete = !this.attemptDelete
+      this.openAreYouSure({
+        title: 'Delete Location',
+        message:
+          'Are you sure you want to delete this location? This action cannot be undone.',
+        action: this.deleteLoc,
+        nonAction: ''
+      })
     },
     updateLoc(e) {
       e.preventDefault()

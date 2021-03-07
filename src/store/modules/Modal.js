@@ -13,6 +13,8 @@ export const modal = {
     OPEN_ARE_YOU_SURE(state, args) {
       state.areYouSureTitle = args.title
       state.areYouSureMessage = args.message
+      state.areYouSureAction = args.action
+      state.areYouSureNonAction = args.nonAction
       state.areYouSureOpen = true
     },
     CLOSE_ARE_YOU_SURE(state) {
@@ -37,6 +39,13 @@ export const modal = {
   },
   actions: {
     openAreYouSure(context, args) {
+      /*
+            expects: 
+                title
+                message
+                action
+                nonAction
+        */
       context.commit('OPEN_ARE_YOU_SURE', args)
     },
     closeAreYouSure(context) {
