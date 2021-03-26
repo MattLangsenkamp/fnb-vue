@@ -5,10 +5,7 @@
     </l-tooltip>
     <l-popup class="inline-block break-words  w-64">
       <div class="flex justify-around">
-        <img
-          src="https://via.placeholder.com/950x300"
-          class="max-h-60 rounded"
-        />
+        <img :src="this.loc.pictureURI" class="max-h-60 rounded" />
       </div>
       <div class="inline-block p-2">
         <h2

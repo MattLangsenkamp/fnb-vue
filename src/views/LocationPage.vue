@@ -1,6 +1,8 @@
 <template>
   <div>
-    <form class="w-3/4 sm:w-1/2 m-auto border p-4 border-indigo-500 rounded">
+    <form
+      class="w-3/4 sm:w-1/2 mb-2 mx-auto border p-4 border-indigo-500 rounded"
+    >
       <map-button
         v-if="allowEditing && !editing"
         title="Edit"

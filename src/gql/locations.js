@@ -131,6 +131,7 @@ export const LOCATIONS = gql`
       locationName
       locationOwner
       friendlyName
+      pictureURI
       description
     }
   }
