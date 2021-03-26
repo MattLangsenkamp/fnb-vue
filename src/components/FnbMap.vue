@@ -156,8 +156,8 @@ export default {
     const name = ref('')
     const friendlyName = ref('')
     const description = ref('')
-    const latitude = ref(0)
-    const longitude = ref(0)
+    const latitude = ref(43.1521)
+    const longitude = ref(-77.607649)
     const picture = ref('')
     const locationTags = ref([])
 
@@ -257,6 +257,7 @@ export default {
       this.submitting = false
     },
     setFillingForm() {
+      console.log(this.latitude, this.longitude)
       this.getAddress({
         latitude: String(this.latitude),
         longitude: String(this.longitude)
@@ -294,6 +295,12 @@ export default {
           locationTags: this.locationTags
         }).then(() => {
           this.setNotAdding()
+          this.name = ''
+          this.friendlyName = ''
+          this.description = ''
+          this.picture = ''
+          this.locationTags = []
+          this.v.$reset()
         })
       }
     }

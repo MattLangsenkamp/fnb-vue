@@ -3,6 +3,7 @@
     <form class="w-3/4 sm:w-1/2 m-auto border p-4 border-indigo-500 rounded">
       <map-button
         v-if="allowEditing && !editing"
+        title="Edit"
         text="Edit"
         buttonType="form"
         @click="toggleEditing"
@@ -30,6 +31,7 @@
       <map-button
         class="button"
         v-if="editing"
+        title="Submit"
         text="Submit"
         buttonType="form"
         @click="updateLoc"
@@ -37,12 +39,14 @@
       <map-button
         class="button"
         v-if="editing"
+        title="Delete"
         text="Delete"
         buttonType="form"
         @click="toggleAttDel"
       />
       <map-button
         v-if="editing"
+        title="Cancel"
         text="Cancel"
         buttonType="form"
         @click="toggleEditing"
@@ -130,7 +134,8 @@ export default {
       'updateLocation', // map `this.updateUser(user)` to `this.$store.dispatch('updateUser', user)`
       'getLocation',
       'deleteLocation',
-      'openAreYouSure'
+      'openAreYouSure',
+      'closeAreYouSure'
     ]),
     toggleEditing() {
       this.editing = !this.editing
@@ -146,7 +151,7 @@ export default {
       this.openAreYouSure({
         title: 'Delete Location',
         message:
-          'Are you sure you want to delete this location? This action cannot be undone.',
+          'Are you sure you want to delete this location? This action cannot beeee undone.',
         action: this.deleteLoc,
         nonAction: ''
       })
@@ -174,6 +179,7 @@ export default {
     },
     deleteLoc() {
       this.deleteLocation({ id: this.id }).then(() => {
+        this.closeAreYouSure()
         this.$router.push({
           name: 'Locations'
         })
@@ -223,21 +229,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.leaflet-style {
-  display: flex;
-  flex-flow: column wrap;
-  flex-direction: column;
-  background-color: #fff;
-  text-align: left;
-  text-decoration: none;
-  color: black;
-  border-radius: 4px;
-  border: 2px solid #ccc;
-  padding: 0.7em;
-  width: 75%;
-  margin-right: auto;
-  margin-left: auto;
-}
-</style>

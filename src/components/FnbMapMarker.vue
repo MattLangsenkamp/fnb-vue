@@ -46,6 +46,7 @@
         </div>
         <map-button
           @click="goToProfile"
+          title="steward page"
           text="steward page"
           buttonType="form"
         />

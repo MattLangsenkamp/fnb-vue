@@ -116,43 +116,53 @@
             </button>
           </div>
         </div>
-        <div class="px-2 pt-2 pb-3 space-y-1">
-          <router-link
-            to="/"
-            class="block text-center w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-            >About</router-link
-          >
 
+        <div class="px-2 pt-2 pb-3 space-y-1">
+          <div @click="toggleExpand">
+            <router-link
+              to="/"
+              class="block text-center w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+              >About</router-link
+            >
+          </div>
+          <div @click="toggleExpand">
+            <router-link
+              to="/locations"
+              class="block text-center px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+              >Map</router-link
+            >
+          </div>
+        </div>
+        <div @click="toggleExpand">
           <router-link
-            to="/locations"
-            class="block text-center px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-            >Map</router-link
+            v-if="!loggedIn"
+            to="/signin"
+            class="block w-full px-5 py-3 text-center font-medium text-indigo-600 bg-gray-50 hover:bg-gray-100"
+          >
+            Log in
+          </router-link>
+        </div>
+        <div @click="toggleExpand">
+          <router-link
+            v-if="!loggedIn"
+            to="/signup"
+            class="block w-full px-5 py-3 text-center font-medium text-indigo-600 bg-gray-50 hover:bg-gray-100"
+          >
+            Sign up
+          </router-link>
+        </div>
+        <div @click="toggleExpand">
+          <router-link
+            v-if="loggedIn"
+            class="block w-full px-5 py-3 text-center font-medium text-indigo-600 bg-gray-50 hover:bg-gray-100"
+            :to="{ name: 'Profile', params: { id: userId } }"
+            >Profile</router-link
           >
         </div>
-        <router-link
-          v-if="!loggedIn"
-          to="/signin"
-          class="block w-full px-5 py-3 text-center font-medium text-indigo-600 bg-gray-50 hover:bg-gray-100"
-        >
-          Log in
-        </router-link>
-        <router-link
-          v-if="!loggedIn"
-          to="/signup"
-          class="block w-full px-5 py-3 text-center font-medium text-indigo-600 bg-gray-50 hover:bg-gray-100"
-        >
-          Sign up
-        </router-link>
-        <router-link
-          v-if="loggedIn"
-          class="block w-full px-5 py-3 text-center font-medium text-indigo-600 bg-gray-50 hover:bg-gray-100"
-          :to="{ name: 'Profile', params: { id: userId } }"
-          >profile</router-link
-        >
         <a
           href="#"
           v-if="loggedIn"
-          @click="logOut"
+          @click="logOut(), toggleExpand($event)"
           class="block w-full px-5 py-3 text-center font-medium text-indigo-600 bg-gray-50 hover:bg-gray-100"
           >Log Out</a
         >
@@ -164,16 +174,20 @@
 <script>
 import { watch } from 'vue'
 import { mapActions, mapGetters } from 'vuex'
+import Modal from './Modal.vue'
+
 export default {
   name: 'Header',
+  components: { Modal },
   data() {
     return {
       expanded: false
     }
   },
   methods: {
-    ...mapActions(['getUserData', 'logOut']),
-    toggleExpand() {
+    ...mapActions(['getUserData', 'logOut', 'closeAreYouSure']),
+    toggleExpand(event) {
+      event.preventDefault()
       this.expanded = !this.expanded
     }
   },
