@@ -76,7 +76,9 @@ export const auth = {
             })
             resolve()
           })
-          .catch(err => console.log(err))
+          .catch(err => {
+            console.log(err)
+          })
       })
     },
     logOut(context) {
