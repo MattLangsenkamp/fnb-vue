@@ -7,6 +7,7 @@ import {
   PICTURES
 } from '../../gql/locations'
 import { setHeaders } from '../jwtUtils.js'
+import { uploadFile } from '../PresignedUrlUtils'
 import { client } from '../client.js'
 
 export const location = {
@@ -43,6 +44,7 @@ export const location = {
           .then(({ data, headers }) => {
             // setHeaders(headers)
 
+            //
             context.commit('UPSERT_LOCATION', data.updateLocation)
             resolve(data.updateLocation)
           })

@@ -1,5 +1,6 @@
 import { UPDATE_USER_DATA, USER_DATA } from '../../gql/userData.js'
 import { setHeaders } from '../jwtUtils.js'
+import { uploadFile } from '../PresignedUrlUtils'
 import { client } from '../client.js'
 
 export const userData = {
@@ -38,8 +39,12 @@ export const userData = {
         client
           .rawRequest(UPDATE_USER_DATA, user)
           .then(({ data, headers }) => {
-            context.commit('UPSERT_USER_DATA', data.updateUserData)
-            resolve(data.updateUser)
+            uploadFile(user.picture, data.preSignedURL)
+              .then(() => {
+                context.commit('UPSERT_USER_DATA', data.updateUserData)
+                resolve(data.updateUser)
+              })
+              .catch(err => console.log(err))
           })
           .catch(err => console.log(err))
       })

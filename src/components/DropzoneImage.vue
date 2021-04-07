@@ -81,6 +81,7 @@ export default {
   methods: {
     handleImage(e) {
       const selectedImage = e.target.files[0]
+
       this.convertToBase64(selectedImage)
     },
     convertToBase64(imageFile) {

@@ -36,13 +36,13 @@ export const USER_DATAS = gql`
 export const ADD_USER_DATA = gql`
   mutation AddUserData(
     $username: String!
-    $picture: String!
+    $pictureType: String!
     $description: String!
     $contact: String!
   ) {
     addUserData(
       username: $username
-      picture: $picture
+      pictureType: $pictureType
       description: $description
       contact: $contact
     ) {
@@ -52,6 +52,7 @@ export const ADD_USER_DATA = gql`
       contact
       description
       pictureURI
+      preSignedURL
     }
   }
 `
@@ -82,6 +83,7 @@ export const UPDATE_USER_DATA = gql`
         id
         locationName
       }
+      preSignedURL
     }
   }
 `

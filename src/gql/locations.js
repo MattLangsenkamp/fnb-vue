@@ -7,7 +7,7 @@ export const ADD_LOCATION = gql`
     $description: String!
     $latitude: Float!
     $longitude: Float!
-    $picture: String!
+    $pictureType: String!
     $locationTags: [LocationTagInput!]!
   ) {
     addLocation(
@@ -16,7 +16,7 @@ export const ADD_LOCATION = gql`
       description: $description
       latitude: $latitude
       longitude: $longitude
-      picture: $picture
+      pictureType: $pictureType
       locationTags: $locationTags
     ) {
       id
@@ -34,6 +34,7 @@ export const ADD_LOCATION = gql`
       }
       needsCleaning
       pictureURI
+      preSignedURL
     }
   }
 `
@@ -46,7 +47,7 @@ export const UPDATE_LOCATION = gql`
     $description: String
     $latitude: Float
     $longitude: Float
-    $picture: String
+    $pictureType: String
     $typeTags: [LocationTagInput!]
   ) {
     updateLocation(
@@ -56,7 +57,7 @@ export const UPDATE_LOCATION = gql`
       friendlyName: $friendlyName
       latitude: $latitude
       longitude: $longitude
-      picture: $picture
+      pictureType: $pictureType
       typeTags: $typeTags
     ) {
       id
@@ -74,6 +75,7 @@ export const UPDATE_LOCATION = gql`
       }
       needsCleaning
       pictureURI
+      preSignedURL
     }
   }
 `
