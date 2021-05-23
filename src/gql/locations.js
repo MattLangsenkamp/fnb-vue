@@ -7,7 +7,6 @@ export const ADD_LOCATION = gql`
     $description: String!
     $latitude: Float!
     $longitude: Float!
-    $pictureType: String!
     $locationTags: [LocationTagInput!]!
   ) {
     addLocation(
@@ -16,7 +15,6 @@ export const ADD_LOCATION = gql`
       description: $description
       latitude: $latitude
       longitude: $longitude
-      pictureType: $pictureType
       locationTags: $locationTags
     ) {
       id
@@ -32,9 +30,12 @@ export const ADD_LOCATION = gql`
         id
         ownerId
       }
+      imageUrls {
+        id
+        imageUri
+        ownerId
+      }
       needsCleaning
-      pictureURI
-      preSignedURL
     }
   }
 `
@@ -47,7 +48,6 @@ export const UPDATE_LOCATION = gql`
     $description: String
     $latitude: Float
     $longitude: Float
-    $pictureType: String
     $typeTags: [LocationTagInput!]
   ) {
     updateLocation(
@@ -57,7 +57,6 @@ export const UPDATE_LOCATION = gql`
       friendlyName: $friendlyName
       latitude: $latitude
       longitude: $longitude
-      pictureType: $pictureType
       typeTags: $typeTags
     ) {
       id
@@ -73,9 +72,12 @@ export const UPDATE_LOCATION = gql`
         id
         ownerId
       }
+      imageUrls {
+        id
+        imageUri
+        ownerId
+      }
       needsCleaning
-      pictureURI
-      preSignedURL
     }
   }
 `
@@ -97,7 +99,6 @@ export const DELETE_LOCATION = gql`
         ownerId
       }
       needsCleaning
-      pictureURI
     }
   }
 `
@@ -118,8 +119,12 @@ export const LOCATION = gql`
         id
         ownerId
       }
+      imageUrls {
+        id
+        imageUri
+        ownerId
+      }
       needsCleaning
-      pictureURI
     }
   }
 `
@@ -133,8 +138,12 @@ export const LOCATIONS = gql`
       locationName
       locationOwner
       friendlyName
-      pictureURI
       description
+      imageUrls {
+        id
+        imageUri
+        ownerId
+      }
     }
   }
 `
@@ -143,7 +152,6 @@ export const PICTURES = gql`
   query Locations($userId: Int) {
     locations(id: $userId) {
       id
-      pictureURI
     }
   }
 `

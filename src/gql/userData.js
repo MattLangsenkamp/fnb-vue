@@ -6,12 +6,20 @@ export const USER_DATA = gql`
       id
       username
       contact
+      imageUrls {
+        id
+        imageUri
+      }
       orgUserId
       description
-      pictureURI
       locations {
         id
         locationName
+        imageUrls {
+          id
+          imageUri
+          ownerId
+        }
       }
     }
   }
@@ -22,12 +30,20 @@ export const USER_DATAS = gql`
     userDatas {
       id
       username
+      imageUrls {
+        id
+        imageUri
+      }
       contact
       description
-      pictureURI
       locations {
         id
         locationName
+        imageUrls {
+          id
+          imageUri
+          ownerId
+        }
       }
     }
   }
@@ -36,13 +52,11 @@ export const USER_DATAS = gql`
 export const ADD_USER_DATA = gql`
   mutation AddUserData(
     $username: String!
-    $pictureType: String!
     $description: String!
     $contact: String!
   ) {
     addUserData(
       username: $username
-      pictureType: $pictureType
       description: $description
       contact: $contact
     ) {
@@ -51,8 +65,6 @@ export const ADD_USER_DATA = gql`
       orgUserId
       contact
       description
-      pictureURI
-      preSignedURL
     }
   }
 `
@@ -63,7 +75,6 @@ export const UPDATE_USER_DATA = gql`
     $username: String
     $contact: String
     $description: String
-    $picture: String
     $locations: [LocationInput!]
   ) {
     updateUserData(
@@ -71,19 +82,24 @@ export const UPDATE_USER_DATA = gql`
       username: $username
       contact: $contact
       description: $description
-      picture: $picture
       locations: $locations
     ) {
       id
       username
       contact
+      imageUrls {
+        id
+        imageUri
+      }
       description
-      pictureURI
       locations {
         id
         locationName
+        imageUrls {
+          id
+          imageUri
+        }
       }
-      preSignedURL
     }
   }
 `
@@ -95,7 +111,6 @@ export const DELETE_USER_DATA = gql`
       username
       contact
       description
-      pictureURI
       locations {
         id
         locationName

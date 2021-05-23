@@ -43,8 +43,8 @@
       placeHolder="Roc Food Not Bombs recovers and shares free vegetarian and vegan meals & food in our local community of Rochester, NY."
     />
     <error-message :validationStatus="v.description" />
-    <dropzone-image v-model="picture" label="Profile Picture" />
-    <error-message :validationStatus="v.picture" />
+    <dropzone-image v-model="image" label="Profile Picture" />
+    <error-message :validationStatus="v.image" />
     <map-button
       buttonType="form"
       text="Submit"
@@ -82,7 +82,7 @@ export default {
     const username = ref('')
     const contact = ref('')
     const description = ref('')
-    const picture = ref('')
+    const image = ref('')
     // Validation Logics
     const rules = {
       userEmail: { required, email },
@@ -91,7 +91,7 @@ export default {
       username: { required, minLength: minLength(2) },
       contact: { required, minLength: minLength(2) },
       description: { required, minLength: minLength(8) },
-      picture: { required }
+      image: { required }
     }
     const v = useVuelidate(rules, {
       userEmail,
@@ -100,7 +100,7 @@ export default {
       username,
       contact,
       description,
-      picture
+      image
     })
     return {
       userEmail,
@@ -109,7 +109,7 @@ export default {
       username,
       contact,
       description,
-      picture,
+      image,
       v
     }
   },
@@ -126,7 +126,7 @@ export default {
           username: this.username,
           description: this.description,
           contact: this.contact,
-          picture: this.picture
+          image: this.image
         }).then(() => {
           this.$router.push({
             name: 'Locations'

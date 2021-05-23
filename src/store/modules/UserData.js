@@ -1,11 +1,24 @@
 import { UPDATE_USER_DATA, USER_DATA } from '../../gql/userData.js'
 import { setHeaders } from '../jwtUtils.js'
-import { uploadFile } from '../PresignedUrlUtils'
+import { getMimeType, filterProblematicKey } from '../PresignedUrlUtils'
 import { client } from '../client.js'
 
 export const userData = {
   state: () => ({ userDatas: [] }),
   mutations: {
+    UPSERT_USERDATA_IMAGEURL(state, imageUrl) {
+      const oldUserData = JSON.parse(
+        JSON.stringify(state.userDatas.find(us => us.id === imageUrl.ownerId))
+      )
+      state.userDatas = state.userDatas.filter(us => us.id != imageUrl.ownerId)
+
+      const imgsWithoutNewImg = oldUserData.imageUrls.filter(
+        imgUrl => imgUrl.id != imageUrl.id
+      )
+      const newImageUrls = imgsWithoutNewImg.push(imageUrl)
+      const newUserData = (oldUserData.imageUrls = newImageUrls)
+      state.userDatas.push(newUserData)
+    },
     UPSERT_USER_DATA(state, user) {
       state.userDatas = state.userDatas.filter(us => us.id != user.id)
       state.userDatas.push(user)
@@ -17,6 +30,10 @@ export const userData = {
       state.userDatas = state.userDatas.filter(us => us.orgUserId != user.id)
     }
   },
+
+  /*
+    id: int
+  */
   actions: {
     getUserData(context, id) {
       return new Promise((resolve, reject) => {
@@ -34,17 +51,37 @@ export const userData = {
           })
       })
     },
-    updateUserData(context, user) {
+
+    /*
+      user {
+        $id: Int!
+        $username: String
+        $contact: String
+        $description: String
+        $locations: [LocationInput!]
+        image: The real image file
+      }
+    */
+    updateUserData({ commit, dispatch, state }, user) {
       return new Promise((resolve, reject) => {
+        const newUser = filterProblematicKey(user, 'image')
         client
-          .rawRequest(UPDATE_USER_DATA, user)
+          .rawRequest(UPDATE_USER_DATA, newUser)
           .then(({ data, headers }) => {
-            uploadFile(user.picture, data.preSignedURL)
-              .then(() => {
-                context.commit('UPSERT_USER_DATA', data.updateUserData)
-                resolve(data.updateUser)
+            commit('UPSERT_USER_DATA', data.updateUserData)
+            if (user.image !== void 0) {
+              dispatch('replaceImagePreSignedUrl', {
+                imageFile: user.image,
+                mimeType: getMimeType(user.image),
+                type: 'orgUser',
+                id: data.updateUserData.imageUrls[0].id
               })
-              .catch(err => console.log(err))
+                .then(imageUrl => {
+                  commit('UPSERT_USERDATA_IMAGE_URL', imageUrl)
+                  resolve(state.userDatas.filter(us => us.id === user.id))
+                })
+                .catch(err => console.log(err))
+            }
           })
           .catch(err => console.log(err))
       })
