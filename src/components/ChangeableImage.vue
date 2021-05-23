@@ -43,7 +43,7 @@ export default {
   name: 'ChangeableImage',
   props: {
     modelValue: {
-      type: [String, Number],
+      type: [String, File],
       default: ''
     },
     label: {
@@ -55,25 +55,31 @@ export default {
       default: true
     }
   },
+  data() {
+    return {
+      imgData: ''
+    }
+  },
   computed: {
     img() {
-      if (this.modelValue == '') {
-        return 'https://via.placeholder.com/50x50'
-      } else {
-        return this.modelValue
+      var d = new Date()
+      if (typeof this.modelValue === 'string') {
+        return this.modelValue + '?ver=' + d.getTime()
       }
+      return this.imgData
     }
   },
   methods: {
     handleImage(e) {
       const selectedImage = e.target.files[0]
       this.convertToBase64(selectedImage)
+      this.$emit('update:modelValue', selectedImage)
     },
+
     convertToBase64(imageFile) {
       const reader = new FileReader()
-
       reader.onload = e => {
-        this.$emit('update:modelValue', e.target.result)
+        this.imgData = e.target.result
       }
       reader.readAsDataURL(imageFile)
     }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <form
-      class="w-3/4 sm:w-1/2 border p-4 mb-2 mx-auto border-indigo-500 rounded"
+      class="w-3/4 md:w-1/2 border p-4 mb-2 mx-auto border-indigo-500 rounded"
     >
       <map-button
         v-if="allowEditing && !editing"
@@ -22,11 +22,11 @@
       <error-message :validationStatus="v.description" />
 
       <changeable-image
-        v-model="picture"
+        v-model="imageUri"
         :editing="isEditing"
         label="Profile Picture"
       />
-      <error-message :validationStatus="v.picture" />
+      <error-message :validationStatus="v.imageUri" />
       <map-button
         class="button"
         v-if="editing"
@@ -77,27 +77,27 @@ export default {
     const username = ref('')
     const contact = ref('')
     const description = ref('')
-    const picture = ref('')
+    const imageUri = ref([])
     const locations = ref([])
 
     const rules = {
       username: { required, minLength: minLength(2) },
       contact: { required, minLength: minLength(2) },
       description: { required, minLength: minLength(8) },
-      picture: { required }
+      imageUri: { required }
     }
     const v = useVuelidate(rules, {
       username,
       contact,
       description,
-      picture
+      imageUri
     })
     return {
       editing,
       username,
       contact,
       description,
-      picture,
+      imageUri,
       locations,
       v
     }
@@ -111,20 +111,25 @@ export default {
     ]),
     toggleEditing() {
       this.editing = !this.editing
+      const userDataAfterUpdating = this.$store.state.userDataMod.userDatas.find(
+        ud => ud.id === this.$route.params.id
+      )
+      if (userDataAfterUpdating) {
+        this.initProfile(userDataAfterUpdating)
+      }
     },
     updateProf(e) {
       e.preventDefault()
       this.v.$validate()
       this.v.$dirty = true
       if (!this.v.$error) {
-        e.preventDefault()
         this.updateUserData({
           id: this.id,
           orgUserId: this.orgUserId,
           username: this.username,
           contact: this.contact,
           description: this.description,
-          picture: this.picture
+          imageUri: this.imageUri
         }).then(() => {
           this.toggleEditing()
           this.v.$reset()
@@ -144,7 +149,7 @@ export default {
       description,
       id,
       orgUserId,
-      pictureURI,
+      imageUrls,
       username,
       locations
     }) {
@@ -152,7 +157,9 @@ export default {
       this.orgUserId = orgUserId
       this.contact = contact
       this.username = username
-      this.picture = pictureURI
+      if (imageUrls[0]) {
+        this.imageUri = imageUrls[0].imageUri
+      }
       this.locations = locations
       this.description = description
     },

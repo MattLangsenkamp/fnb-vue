@@ -1,7 +1,7 @@
 <template>
   <div>
     <form
-      class="w-3/4 sm:w-1/2 mb-2 mx-auto border p-4 border-indigo-500 rounded"
+      class="w-3/4 md:w-1/2 mb-2 mx-auto border p-4 border-indigo-500 rounded"
     >
       <map-button
         v-if="allowEditing && !editing"
@@ -27,9 +27,10 @@
       <error-message :validationStatus="v.description" />
       <changeable-image
         label="Location Picture"
-        v-model="picture"
+        v-model="image"
         :editing="isEditing"
       />
+      <error-message :validationStatus="v.image" />
       <map-button
         class="button"
         v-if="editing"
@@ -89,7 +90,7 @@ export default {
     const description = ref('')
     const latitude = ref(0)
     const longitude = ref(0)
-    const picture = ref('')
+    const image = ref('')
     const locationOwner = ref('')
     const needsCleaning = ref(false)
     const locationTags = ref([])
@@ -104,7 +105,7 @@ export default {
         minValue: minValue(-180),
         maxValue: maxValue(180)
       },
-      picture: { required },
+      image: { required },
       locationTags: {}
     }
     const v = useVuelidate(rules, {
@@ -113,17 +114,18 @@ export default {
       description,
       latitude,
       longitude,
-      picture,
+      image,
       locationTags
     })
     return {
+      id,
       editing,
       name,
       friendlyName,
       description,
       latitude,
       longitude,
-      picture,
+      image,
       locationTags,
       locationOwner,
       needsCleaning,
@@ -141,6 +143,13 @@ export default {
     ]),
     toggleEditing() {
       this.editing = !this.editing
+      const locAfterUpdating = this.$store.state.locMod.locs.find(
+        loc => loc.id === this.$route.params.id
+      )
+      console.log(this.$store.state.locMod.locs)
+      if (locAfterUpdating) {
+        this.initProfile(locAfterUpdating)
+      }
     },
     goToProfile() {
       this.$router.push({
@@ -153,7 +162,7 @@ export default {
       this.openAreYouSure({
         title: 'Delete Location',
         message:
-          'Are you sure you want to delete this location? This action cannot beeee undone.',
+          'Are you sure you want to delete this location? This action cannot be undone.',
         action: this.deleteLoc,
         nonAction: ''
       })
@@ -163,7 +172,7 @@ export default {
       this.v.$validate()
       this.v.$dirty = true
       if (!this.v.$error) {
-        e.preventDefault()
+        // check dirty
         this.updateLocation({
           id: this.id,
           name: this.name,
@@ -171,7 +180,7 @@ export default {
           description: this.description,
           latitude: parseFloat(this.latitude),
           longitude: parseFloat(this.longitude),
-          picture: this.picture,
+          image: this.image,
           locationTags: this.locationTags
         }).then(() => {
           this.toggleEditing()
@@ -197,7 +206,7 @@ export default {
       locationTags,
       longitude,
       needsCleaning,
-      pictureURI
+      imageUrls
     }) {
       this.description = description
       this.friendlyName = friendlyName
@@ -207,7 +216,11 @@ export default {
       this.latitude = latitude
       this.longitude = longitude
       this.name = locationName
-      this.picture = pictureURI
+      if (imageUrls && imageUrls[0]) {
+        this.image = imageUrls[0].imageUri
+      } else {
+        this.image = 'no'
+      }
     }
   },
   created() {

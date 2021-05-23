@@ -5,7 +5,7 @@
     </l-tooltip>
     <l-popup class="inline-block break-words  w-64">
       <div class="flex justify-around">
-        <img :src="this.loc.pictureURI" class="max-h-60 rounded" />
+        <img :src="imageUri" class="max-h-60 rounded" />
       </div>
       <div class="inline-block p-2">
         <h2
@@ -56,6 +56,7 @@
 import { LMarker, LTooltip, LPopup } from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
 import MapButton from './MapButton.vue'
+import { compile } from 'vue-demi'
 
 export default {
   name: 'FnbMapMarker',
@@ -90,6 +91,11 @@ export default {
     },
     show() {
       return !this.adding
+    },
+    imageUri() {
+      var d = new Date()
+      if (this.loc.imageUrls[0] === void 0) return ''
+      return this.loc.imageUrls[0].imageUri + '?ver=' + d.getTime()
     }
   }
 }

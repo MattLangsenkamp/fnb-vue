@@ -8,7 +8,7 @@
       <img
         v-for="pic in pics"
         :key="pic.id"
-        :src="pic.pictureURI"
+        :src="pic.imageUri + '?ver=' + getDate()"
         class="rounded h-32 sm:h-56 w-auto m-1"
       />
     </div>
@@ -34,7 +34,11 @@ import { mapActions } from 'vuex'
 export default {
   components: {},
   methods: {
-    ...mapActions(['getPictures'])
+    ...mapActions(['imageUrls']),
+    getDate() {
+      var d = new Date()
+      return d.getTime()
+    }
   },
   data() {
     return {
@@ -47,7 +51,8 @@ export default {
     }
   },
   created() {
-    this.getPictures().then(data => {
+    this.imageUrls({ type: 'location' }).then(data => {
+      console.log(data)
       for (let index = 0; index < 5 && index < data.length; index++) {
         this.picsD.push(data[index])
       }

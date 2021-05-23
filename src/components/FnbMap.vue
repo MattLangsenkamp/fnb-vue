@@ -71,7 +71,7 @@
             v-model="description"
           />
           <error-message :validationStatus="v.description" />
-          <dropzone-image v-model="picture" label="Location Picture" />
+          <dropzone-image v-model="newImage" label="Location Picture" />
           <MapButton
             text="submit"
             title="submit"
@@ -158,7 +158,7 @@ export default {
     const description = ref('')
     const latitude = ref(43.1521)
     const longitude = ref(-77.607649)
-    const picture = ref('')
+    const newImage = ref('')
     const locationTags = ref([])
 
     const rules = {
@@ -171,7 +171,7 @@ export default {
         minValue: minValue(-180),
         maxValue: maxValue(180)
       },
-      picture: { required },
+      newImage: { required },
       locationTags: {}
     }
     const v = useVuelidate(rules, {
@@ -180,7 +180,7 @@ export default {
       description,
       latitude,
       longitude,
-      picture,
+      newImage,
       locationTags
     })
     return {
@@ -189,7 +189,7 @@ export default {
       description,
       latitude,
       longitude,
-      picture,
+      newImage,
       locationTags,
       v
     }
@@ -291,14 +291,14 @@ export default {
           description: this.description,
           latitude: this.latitude,
           longitude: this.longitude,
-          picture: this.picture,
+          image: this.newImage,
           locationTags: this.locationTags
         }).then(() => {
           this.setNotAdding()
           this.name = ''
           this.friendlyName = ''
           this.description = ''
-          this.picture = ''
+          this.newImage = ''
           this.locationTags = []
           this.v.$reset()
         })

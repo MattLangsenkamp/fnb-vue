@@ -25,7 +25,6 @@ export const SIGN_UP = gql`
     $username: String!
     $contact: String!
     $description: String!
-    $picture: String!
   ) {
     signUp(
       email: $email
@@ -33,7 +32,6 @@ export const SIGN_UP = gql`
       username: $username
       contact: $contact
       description: $description
-      picture: $picture
     ) {
       accessToken
       refreshToken

@@ -38,19 +38,25 @@ export const modal = {
     }
   },
   actions: {
+    /*
+      expects: 
+        title
+        message
+        action
+        nonAction
+    */
     openAreYouSure(context, args) {
-      /*
-            expects: 
-                title
-                message
-                action
-                nonAction
-        */
       context.commit('OPEN_ARE_YOU_SURE', args)
     },
     closeAreYouSure(context) {
       context.commit('CLOSE_ARE_YOU_SURE')
     },
+
+    /*
+      args {
+         $errorMessage: String       
+      }
+    */
     openErrorAlert(context, args) {
       context.commit('OPEN_ERROR_ALERT', args)
     },

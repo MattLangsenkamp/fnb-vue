@@ -2,6 +2,7 @@ import { SIGN_IN, SIGN_UP, DELETE_USER } from '../../gql/auth'
 import { getUserFromJwt } from '../jwtUtils.js'
 import { setHeaders } from '../jwtUtils.js'
 import { client } from '../client.js'
+import { filterProblematicKey, getMimeType } from '../PresignedUrlUtils'
 
 export const auth = {
   state: () => ({
@@ -23,6 +24,7 @@ export const auth = {
       localStorage.setItem('refreshToken', refreshToken)
     }
   },
+
   actions: {
     init(context) {
       const accessToken = localStorage.getItem('accessToken') || ''
@@ -36,13 +38,19 @@ export const auth = {
         RefreshToken: refreshToken
       })
     },
+
+    /*
+      user {
+        $email: String!,
+        $password: String!
+      }
+    */
     signIn(context, user) {
       return new Promise((resolve, reject) => {
         console.log('sign in')
         client
           .rawRequest(SIGN_IN, user)
           .then(({ data }) => {
-            console.log(data)
             setHeaders({
               AccessToken: data.signIn.accessToken,
               RefreshToken: data.signIn.refreshToken
@@ -57,24 +65,50 @@ export const auth = {
           .catch(err => console.log(err))
       })
     },
-    signUp(context, user) {
+
+    /*
+      user {
+        $email: String!,
+        $password: String!,
+        $username: String!,
+        $contact: String!,
+        $description: String!
+        $image: the actual image
+      }
+    */
+    signUp({ commit, dispatch, rootState }, user) {
       return new Promise((resolve, reject) => {
         console.log('sign up')
+        const newUser = filterProblematicKey(user, 'image')
         client
-          .rawRequest(SIGN_UP, user)
+          .rawRequest(SIGN_UP, newUser)
           .then(({ data }) => {
-            console.log(data)
             setHeaders({
               AccessToken: data.signUp.accessToken,
               RefreshToken: data.signUp.refreshToken
             })
-            // not a typo, only sign in on the client side cus its just setting the jwt
-            context.commit('SIGN_IN', getUserFromJwt(data.signUp.accessToken))
-            context.commit('SET_TOKENS', {
-              accessToken: data.signUp.accessToken,
-              refreshToken: data.signUp.refreshToken
+            // TODO add image here now that we have userId
+            const newUser = getUserFromJwt(data.signUp.accessToken)
+            dispatch('addImagePreSignedUrl', {
+              imageFile: user.image,
+              mimeType: getMimeType(user.image),
+              type: 'orgUser',
+              ownerId: parseInt(newUser.jti)
             })
-            resolve()
+              .then(() => {
+                commit('SIGN_IN', getUserFromJwt(data.signUp.accessToken))
+                commit('SET_TOKENS', {
+                  accessToken: data.signUp.accessToken,
+                  refreshToken: data.signUp.refreshToken
+                })
+                resolve(
+                  rootState.userDataMod.userDatas.filter(
+                    us => us.id === user.id
+                  )
+                )
+              })
+              .catch(err => console.log(err))
+            // not a typo, only sign in on the client side cus its just setting the jwt
           })
           .catch(err => {
             console.log(err)
@@ -85,6 +119,12 @@ export const auth = {
       context.commit('LOG_OUT')
       context.commit('SET_TOKENS', { accessToken: null, refreshToken: null })
     },
+
+    /*
+      id {
+        $id: Int!
+      }
+    */
     deleteUser(context, id) {
       return new Promise((resolve, reject) => {
         client

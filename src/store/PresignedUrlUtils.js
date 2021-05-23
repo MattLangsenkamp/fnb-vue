@@ -11,3 +11,13 @@ export async function uploadFile(file, url) {
       console.error(e)
     })
 }
+
+export function getMimeType(file) {
+  return file.type.substring(6)
+}
+
+export function filterProblematicKey(obj, probKey) {
+  return Object.keys(obj)
+    .filter(key => key !== probKey)
+    .reduce((res, key) => ((res[key] = obj[key]), res), {})
+}
