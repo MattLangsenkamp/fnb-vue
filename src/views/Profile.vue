@@ -22,11 +22,11 @@
       <error-message :validationStatus="v.description" />
 
       <changeable-image
-        v-model="imageUri"
+        v-model="image"
         :editing="isEditing"
         label="Profile Picture"
       />
-      <error-message :validationStatus="v.imageUri" />
+      <error-message :validationStatus="v.image" />
       <map-button
         class="button"
         v-if="editing"
@@ -77,27 +77,27 @@ export default {
     const username = ref('')
     const contact = ref('')
     const description = ref('')
-    const imageUri = ref([])
+    const image = ref([])
     const locations = ref([])
 
     const rules = {
       username: { required, minLength: minLength(2) },
       contact: { required, minLength: minLength(2) },
       description: { required, minLength: minLength(8) },
-      imageUri: { required }
+      image: { required }
     }
     const v = useVuelidate(rules, {
       username,
       contact,
       description,
-      imageUri
+      image
     })
     return {
       editing,
       username,
       contact,
       description,
-      imageUri,
+      image,
       locations,
       v
     }
@@ -129,7 +129,7 @@ export default {
           username: this.username,
           contact: this.contact,
           description: this.description,
-          imageUri: this.imageUri
+          image: this.image
         }).then(() => {
           this.toggleEditing()
           this.v.$reset()
@@ -158,7 +158,7 @@ export default {
       this.contact = contact
       this.username = username
       if (imageUrls[0]) {
-        this.imageUri = imageUrls[0].imageUri
+        this.image = imageUrls[0].imageUri
       }
       this.locations = locations
       this.description = description
