@@ -6,15 +6,17 @@ import { client } from '../client.js'
 export const userData = {
   state: () => ({ userDatas: [] }),
   mutations: {
-    UPSERT_USERDATA_IMAGEURL(state, imageUrl) {
+    UPSERT_USERDATA_IMAGE_URL(state, imageUrl) {
       const oldUserData = JSON.parse(
         JSON.stringify(state.userDatas.find(us => us.id === imageUrl.ownerId))
       )
       state.userDatas = state.userDatas.filter(us => us.id != imageUrl.ownerId)
-
-      const imgsWithoutNewImg = oldUserData.imageUrls.filter(
-        imgUrl => imgUrl.id != imageUrl.id
-      )
+      var imgsWithoutNewImg = []
+      if (oldUserData.imageUrls) {
+        imgsWithoutNewImg = oldUserData.imageUrls.filter(
+          imgUrl => imgUrl.id != imageUrl.id
+        )
+      }
       const newImageUrls = imgsWithoutNewImg.push(imageUrl)
       const newUserData = (oldUserData.imageUrls = newImageUrls)
       state.userDatas.push(newUserData)
