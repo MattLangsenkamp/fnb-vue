@@ -1,6 +1,6 @@
 <template>
   <div
-    class="h-screen flex  flex-col justify-between scrollbar-thin scrollbar-thumb-indigo-500 scrollbar-track-indigo-200 "
+    class="h-screen flex  scrollbar-thin overflow-y-scroll flex-col justify-between scrollbar-thin scrollbar-thumb-indigo-500 scrollbar-track-indigo-200 "
   >
     <Modal
       v-if="modalIf"

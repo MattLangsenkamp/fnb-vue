@@ -1,6 +1,6 @@
 <template>
   <div
-    class="font-mono scrollbar-thin scrollbar-thumb-indigo-500 scrollbar-track-indigo-200 overflow-y-scroll text-gray-500 map p-2 pb-12 m-auto max-w-m md:max-w-3xl lg:max-w-5xl xl:max-w-7xl h-full"
+    class="font-mono  text-gray-500 map p-2 pb-12 m-auto max-w-m md:max-w-3xl lg:max-w-5xl xl:max-w-7xl h-full"
   >
     <div
       class="flex p-4 mb-8 justify-center scrollbar-thin scrollbar-thumb-indigo-500 scrollbar-track-indigo-200 overflow-x-scroll"
