@@ -51,7 +51,7 @@
         class="border mr-5 border-indigo-500 max-h-96 bg-white p-1 rounded scrollbar-thin scrollbar-thumb-indigo-500 scrollbar-track-indigo-200 overflow-auto"
         v-if="isFillingOutForm"
       >
-        <form class="max-h-80">
+        <form class="max-h-96">
           <form-input
             label="Name"
             placeHolder="South Wedge Mission"

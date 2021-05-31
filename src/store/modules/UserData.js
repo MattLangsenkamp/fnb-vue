@@ -18,7 +18,8 @@ export const userData = {
         )
       }
       const newImageUrls = imgsWithoutNewImg.push(imageUrl)
-      const newUserData = (oldUserData.imageUrls = newImageUrls)
+      const newUserData = oldUserData
+      newUserData.imageUrls = newImageUrls
       state.userDatas.push(newUserData)
     },
     UPSERT_USER_DATA(state, user) {
