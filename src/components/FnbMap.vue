@@ -48,7 +48,7 @@
 
       <l-control
         position="bottomright"
-        class="border mr-5 border-indigo-500 max-h-96 bg-white p-1 rounded scrollbar-thin scrollbar-thumb-indigo-500 scrollbar-track-indigo-200 overflow-auto"
+        class="border mr-5 border-indigo-500 h-5/6 bg-white p-1 rounded scrollbar-thin scrollbar-thumb-indigo-500 scrollbar-track-indigo-200 overflow-auto"
         v-if="isFillingOutForm"
       >
         <form class=" h-5/6">
