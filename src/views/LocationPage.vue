@@ -12,11 +12,7 @@
       />
       <form-input label="Name" v-model="name" :editing="isEditing" />
       <error-message :validationStatus="v.name" />
-      <form-input
-        label="Friendly Name"
-        v-model="friendlyName"
-        :editing="isEditing"
-      />
+      <form-input label="Address" v-model="friendlyName" :editing="isEditing" />
       <error-message :validationStatus="v.friendlyName" />
       <form-input
         label="Description"

@@ -48,36 +48,40 @@
 
       <l-control
         position="bottomright"
-        class="border mr-5 border-indigo-500 max-h-96 bg-white p-1 rounded scrollbar-thin scrollbar-thumb-indigo-500 scrollbar-track-indigo-200 overflow-auto"
+        class="border mr-5 border-indigo-500 h-full w-full  bg-white p-1 rounded scrollbar-thin scrollbar-thumb-indigo-500 scrollbar-track-indigo-200 overflow-x-scroll"
         v-if="isFillingOutForm"
       >
-        <form class=" max-h-80 ">
-          <form-input
-            label="Name"
-            placeHolder="South Wedge Mission"
-            v-model="name"
-          />
-          <error-message :validationStatus="v.name" />
-          <form-input
-            label="Friendly Name"
-            placeHolder="Caroline Street"
-            v-model="friendlyName"
-          />
-          <error-message :validationStatus="v.friendlyName" />
-          <form-input
-            label="Description"
-            type="textarea"
-            placeHolder="A Free Stand to take what you need from, and give to when you can"
-            v-model="description"
-          />
-          <error-message :validationStatus="v.description" />
-          <dropzone-image v-model="newImage" label="Location Picture" />
-          <MapButton
-            text="submit"
-            title="submit"
-            buttonType="form"
-            @click="addLoc"
-          />
+        <form class=" h-5/6 flex-row flex">
+          <div>
+            <form-input
+              label="Name"
+              placeHolder="South Wedge Mission"
+              v-model="name"
+            />
+            <error-message :validationStatus="v.name" />
+            <form-input
+              label="Address"
+              placeHolder="Caroline Street"
+              v-model="friendlyName"
+            />
+            <error-message :validationStatus="v.friendlyName" />
+            <form-input
+              label="Description"
+              type="textarea"
+              placeHolder="A Free Stand to take what you need from, and give to when you can"
+              v-model="description"
+            />
+            <error-message :validationStatus="v.description" />
+          </div>
+          <div>
+            <dropzone-image v-model="newImage" label="Location Picture" />
+            <MapButton
+              text="submit"
+              title="submit"
+              buttonType="form"
+              @click="addLoc"
+            />
+          </div>
         </form>
       </l-control>
       <l-tile-layer
@@ -310,3 +314,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.myheight {
+  height: 50vh;
+  z-index: 5000;
+}
+</style>

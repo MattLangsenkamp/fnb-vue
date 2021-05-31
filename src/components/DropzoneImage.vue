@@ -15,7 +15,7 @@
     </label>
     <div v-if="modelValue == ''" class="space-y-1 text-center">
       <svg
-        class="mx-auto h-12 w-12 text-gray-400"
+        class="mx-auto max-h-12 max-w-12 text-gray-400"
         stroke="currentColor"
         fill="none"
         viewBox="0 0 48 48"

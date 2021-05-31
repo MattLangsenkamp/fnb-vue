@@ -1,15 +1,16 @@
 <template>
   <div class="p-2 sm:flex w-full">
-    <div class="w-full sm:w-1/3">
+    <div class="w-1/3 mx-2">
+      <!-- w-full sm:w-1/3 !-->
       <label v-if="label" class="text-indigo-600">{{ label }}</label>
     </div>
-    <div class="m-w-2/3">
+    <div class="max-w-lg">
       <input
         v-if="$attrs.type != 'textarea' && editing"
         v-bind="$attrs"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
-        class="p-2 text-gray-500 w-full break-words"
+        class="p-2 text-gray-500 w-full break-words mr-auto ml-0"
         :class="edit"
         :placeholder="placeholderOrLabel"
         :disabled="!editing"
