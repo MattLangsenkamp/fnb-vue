@@ -25,7 +25,8 @@ export const location = {
         )
       }
       const newImageUrls = imgsWithoutNewImg.push(imageUrl)
-      const newLoc = (oldLoc.imageUrls = newImageUrls)
+      const newLoc = oldLoc
+      newLoc.imageUrls = newImageUrls
       console.log('newloc', newLoc)
       state.locs.push(newLoc)
     },
