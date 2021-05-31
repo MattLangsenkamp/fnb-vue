@@ -20,7 +20,7 @@ export const location = {
       state.locs = state.locs.filter(loc => loc.id != imageUrl.ownerId)
       var imgsWithoutNewImg = []
       if (oldLoc.imageUrls) {
-        imgsWithoutNewImg = oldLoc.imageUrls.find(
+        imgsWithoutNewImg = oldLoc.imageUrls.filter(
           imgUrl => imgUrl.id === imageUrl.id
         )
       }
