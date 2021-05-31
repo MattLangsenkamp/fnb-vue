@@ -97,6 +97,9 @@ export default {
       if (this.loc.imageUrls[0] === void 0) return ''
       return this.loc.imageUrls[0].imageUri + '?ver=' + d.getTime()
     }
+  },
+  created() {
+    console.log(this.loc)
   }
 }
 </script>
