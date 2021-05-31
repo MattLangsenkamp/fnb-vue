@@ -15,7 +15,7 @@ export const location = {
   mutations: {
     UPSERT_LOC_IMAGE_URL(state, imageUrl) {
       const oldLoc = JSON.parse(
-        JSON.stringify(state.locs.filter(loc => loc.id === imageUrl.ownerId))
+        JSON.stringify(state.locs.find(loc => loc.id === imageUrl.ownerId))
       )
       state.locs = state.locs.filter(loc => loc.id != imageUrl.ownerId)
       var imgsWithoutNewImg = []
