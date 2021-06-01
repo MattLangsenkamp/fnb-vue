@@ -1,5 +1,5 @@
 <template>
-  <div class="m-2 w-full h-full">
+  <div class="m-4 w-full h-full">
     <l-map
       v-model="zoom"
       v-model:zoom="zoom"
